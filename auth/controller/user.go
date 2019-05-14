@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"imgo/auth/conf"
+	"imgo/conf"
 	"time"
 )
 import "imgo/auth/model"

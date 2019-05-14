@@ -5,7 +5,7 @@ import (
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/mvc"
-	"imgo/auth/conf"
+	"imgo/conf"
 	"imgo/auth/controller"
 )
 
