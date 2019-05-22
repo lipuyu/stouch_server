@@ -9,7 +9,7 @@ import (
 
 var Orm *xorm.Engine
 
-func GetOrm(){
+func LoadOrm(){
 	if Orm == nil {
 		var err error
 		Orm, err = xorm.NewEngine("mysql", "root:@/imgo")

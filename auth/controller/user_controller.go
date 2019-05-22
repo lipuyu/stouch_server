@@ -14,15 +14,20 @@ func (c *UserController) GetHello() interface{} {
 }
 
 func (c *UserController) GetInsert() interface{} {
-	user := &model.User{Username: "kataras", Salt: "hash---", Password: "hashed", CreatedAt: time.Now(), UpdatedAt: time.Now()}
+	user := &model.User{Username: "kataras", Salt: "hash---", Password: "hashed", CreatedAt: time.Now()}
 	imgo.Orm.Insert(user)
 	return user
 }
 
 func (c *UserController) GetGet() interface{} {
-	user := model.User{ID: 1}
-	if ok, _ := imgo.Orm.Get(&user); ok {
-		return user
+	user := model.User{Id: 1}
+	res, err := imgo.Cache.Value("user")
+	if err == nil {
+		user = *res.Data().(*model.User)
+	} else {
+		if ok, _ := imgo.Orm.Get(&user); ok {
+			imgo.Cache.Add("user", 5*time.Second, &user)
+		}
 	}
 	return user
 }

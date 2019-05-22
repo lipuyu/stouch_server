@@ -2,18 +2,14 @@ package main
 
 import (
 	"github.com/kataras/iris"
-	"github.com/kataras/iris/middleware/logger"
-	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/mvc"
-	"imgo/conf"
 	"imgo/auth/controller"
+	"imgo/conf"
 )
 
 
 func newApp() *iris.Application {
 	app := iris.New()
-	app.Use(recover.New())
-	app.Use(logger.New())
 
 	mvc.New(app).Handle(new(controller.UserController))
 	return app
@@ -21,6 +17,7 @@ func newApp() *iris.Application {
 
 func main() {
 	app := newApp()
-	imgo.GetOrm()
+	imgo.LoadOrm()
+	imgo.LoadCache()
 	app.Run(iris.Addr(":8080"))
 }
