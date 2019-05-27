@@ -5,6 +5,7 @@ import (
 	"github.com/kataras/iris/mvc"
 	"imgo/auth/controller"
 	"imgo/conf"
+	"imgo/websocket"
 )
 
 
@@ -19,5 +20,6 @@ func main() {
 	app := newApp()
 	imgo.LoadOrm()
 	imgo.LoadCache()
+	websocket.SetupWebsocket(app)
 	app.Run(iris.Addr(":8080"))
 }
