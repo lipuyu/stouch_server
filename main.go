@@ -17,9 +17,10 @@ func newApp() *iris.Application {
 }
 
 func main() {
+	go conf.Run()
 	app := newApp()
-	imgo.LoadOrm()
-	imgo.LoadCache()
+	conf.LoadOrm()
+	conf.LoadCache()
 	websock.SetupWebsocket(app)
 	app.Run(iris.Addr(":8080"))
 }

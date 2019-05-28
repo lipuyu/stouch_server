@@ -1,4 +1,4 @@
-package imgo
+package conf
 
 import (
 	_ "github.com/go-sql-driver/mysql"

@@ -1,4 +1,4 @@
-package imgo
+package conf
 
 import (
 	"github.com/muesli/cache2go"
