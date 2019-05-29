@@ -11,13 +11,12 @@ import (
 
 func newApp() *iris.Application {
 	app := iris.New()
-
 	mvc.New(app).Handle(new(controller.UserController))
 	return app
 }
 
 func main() {
-	go conf.Run()
+	// go conf.Run()
 	app := newApp()
 	conf.LoadOrm()
 	conf.LoadCache()
