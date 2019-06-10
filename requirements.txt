@@ -1,7 +1,6 @@
 github.com/go-redis/redis
 github.com/whiteshtef/clockwork
 github.com/muesli/cache2go
-github.com/sirupsen/logrus
 github.com/go-sql-driver/mysql
 github.com/go-xorm/xorm
 github.com/kataras/iris
