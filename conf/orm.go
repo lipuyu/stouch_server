@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"github.com/kataras/iris"
@@ -17,10 +18,12 @@ func LoadOrm(){
 			"stouch:Jibuzhu123@rm-2zew4kr6drni3qkok.mysql.rds.aliyuncs.com/stouch",
 			)
 		if err != nil {
+			fmt.Print(err)
+		} else {
+			iris.RegisterOnInterrupt(func() {
+				err = Orm.Close()
+			})
+			err = Orm.Sync2(new(model.User))
 		}
-		iris.RegisterOnInterrupt(func() {
-			Orm.Close()
-		})
-		err = Orm.Sync2(new(model.User))
 	}
 }
