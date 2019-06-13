@@ -27,5 +27,5 @@ func main() {
 	conf.LoadRedis()
 	conf.LoadLog(app)
 	websock.SetupWebsocket(app)
-	app.Run(iris.Addr(":8080"))
+	app.Run(iris.Addr("0.0.0.0:8080"))
 }

@@ -15,7 +15,7 @@ func LoadOrm(){
 		var err error
 		Orm, err = xorm.NewEngine(
 			"mysql",
-			"stouch:Jibuzhu123@rm-2zew4kr6drni3qkok.mysql.rds.aliyuncs.com/stouch",
+			"stouch:Jibuzhu123@tcp(rm-2zew4kr6drni3qkok.mysql.rds.aliyuncs.com:3306)/stouch",
 			)
 		if err != nil {
 			fmt.Print(err)
