@@ -22,7 +22,6 @@ func (c *UserController) GetInsert() interface{} {
 }
 
 func (c *UserController) GetGet(ctx iris.Context) interface{}{
-	conf.Logger.Error("1111111111")
 	user := model.User{Id:1}
 	/*
 	user1 := model.User{}

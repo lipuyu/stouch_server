@@ -2,7 +2,6 @@ package websock
 
 import (
 	"fmt"
-
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/websocket"
 )
@@ -24,10 +23,20 @@ func SetupWebsocket(app *iris.Application) {
 	app.Get("/websocket", ws.Handler())
 }
 
-func handleConnection(c websocket.Connection) {
+var connMap = map[int]websocket.Connection{}
+
+func handleConnection(conn websocket.Connection) {
+	userId, _ := conn.Context().Params().GetInt("user_id")
+	connMap[userId] = conn
 	// Read events from browser
-	c.OnMessage(func(msg []byte) {
-		fmt.Printf("%s sent: %s\n", c.Context().RemoteAddr(), msg)
-		c.To(websocket.Broadcast).Emit("chat", msg)
+	conn.OnMessage(func(msg []byte) {
+		fmt.Printf("%s sent: %s\n", conn.Context().RemoteAddr(), msg)
+		err := conn.Write(1, []byte("你好"))
+		if err !=nil {
+			print(err)
+		}
+	})
+	conn.OnDisconnect(func () {
+		delete(connMap, userId)
 	})
 }

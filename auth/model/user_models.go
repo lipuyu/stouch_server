@@ -9,3 +9,12 @@ type User struct {
 	Password  string    `xorm:"varchar(32)" json:"password"`
 	CreatedAt time.Time `xorm:"created" json:"created_at"`
 }
+
+
+type Token struct {
+	Id int64  `json:"id"` // auto-increment by-default by xorm
+	ticket      string	`xorm:"varchar(32)" json:"ticket"`
+	Username  string	`xorm:"varchar(32)" json:"username"`
+	Password  string    `xorm:"varchar(32)" json:"password"`
+	CreatedAt time.Time `xorm:"created" json:"created_at"`
+}

@@ -7,7 +7,7 @@ import (
 	"github.com/kataras/iris/mvc"
 	"imgo/auth/controller"
 	"imgo/conf"
-	"imgo/websock"
+	"os"
 )
 
 
@@ -20,12 +20,14 @@ func newApp() *iris.Application {
 }
 
 func main() {
-	go conf.Run()
 	app := newApp()
-	conf.LoadOrm()
-	conf.LoadCache()
-	conf.LoadRedis()
 	conf.LoadLog(app)
-	websock.SetupWebsocket(app)
-	app.Run(iris.Addr("0.0.0.0:8080"))
+	env := "test"
+	if len(os.Args) >= 2 {
+		env = os.Args[1]
+	}
+	config := iris.YAML("./conf/source/" + env + ".yml")
+	conf.LoadAll(config)
+	go conf.Run()
+	app.Run(iris.Addr("0.0.0.0:8080"), iris.WithConfiguration(config))
 }

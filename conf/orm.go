@@ -10,12 +10,13 @@ import (
 
 var Orm *xorm.Engine
 
-func LoadOrm(){
+func loadOrm(c iris.Configuration){
 	if Orm == nil {
 		var err error
 		Orm, err = xorm.NewEngine(
 			"mysql",
-			"stouch:Jibuzhu123@tcp(rm-2zew4kr6drni3qkok.mysql.rds.aliyuncs.com:3306)/stouch",
+			//"stouch:Jibuzhu123@tcp(rm-2zew4kr6drni3qkok.mysql.rds.aliyuncs.com:3306)/stouch",
+			c.Other["DataSourceName"].(string),
 			)
 		if err != nil {
 			fmt.Print(err)

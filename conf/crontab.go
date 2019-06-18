@@ -12,6 +12,5 @@ func Run() {
 }
 
 func something() {
-	res, err := Cache.Value("user")
-	fmt.Println(res, err)
+	fmt.Println("hello")
 }

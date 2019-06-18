@@ -6,7 +6,7 @@ import (
 
 var Cache *cache2go.CacheTable
 
-func LoadCache(){
+func loadCache(){
 	if Cache == nil {
 		Cache = cache2go.Cache("myCache")
 	}
