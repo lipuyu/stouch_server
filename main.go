@@ -6,6 +6,7 @@ import (
 	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/mvc"
 	"imgo/auth/controller"
+	"imgo/auth"
 	"imgo/conf"
 	"os"
 )
@@ -26,6 +27,10 @@ func main() {
 	if len(os.Args) >= 2 {
 		env = os.Args[1]
 	}
+	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
+		ctx.HTML("<b>Resource Not found</b>")
+	})
+	app.UseGlobal(auth.Before)
 	config := iris.YAML("./conf/source/" + env + ".yml")
 	conf.LoadAll(config)
 	go conf.Run()
