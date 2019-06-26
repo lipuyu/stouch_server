@@ -5,12 +5,11 @@ import (
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/mvc"
-	"imgo/auth/controller"
 	"imgo/auth"
+	"imgo/auth/controller"
 	"imgo/conf"
-	"os"
+	"imgo/websock"
 )
-
 
 func newApp() *iris.Application {
 	app := iris.New()
@@ -23,16 +22,12 @@ func newApp() *iris.Application {
 func main() {
 	app := newApp()
 	conf.LoadLog(app)
-	env := "test"
-	if len(os.Args) >= 2 {
-		env = os.Args[1]
-	}
+	websock.SetupWebsocket(app) // websocket 服务
+	/*
 	app.OnErrorCode(iris.StatusNotFound, func(ctx iris.Context) {
 		ctx.HTML("<b>Resource Not found</b>")
-	})
+	})*/
 	app.UseGlobal(auth.Before)
-	config := iris.YAML("./conf/source/" + env + ".yml")
-	conf.LoadAll(config)
 	go conf.Run()
-	app.Run(iris.Addr("0.0.0.0:8080"), iris.WithConfiguration(config))
+	app.Run(iris.Addr("0.0.0.0:8080"), iris.WithConfiguration(conf.Config))
 }

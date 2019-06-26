@@ -1,6 +1,11 @@
 package auth
 
-import "github.com/kataras/iris"
+import (
+	"github.com/kataras/iris"
+	"imgo/auth/model"
+	"imgo/common/error_response"
+	"imgo/conf"
+)
 
 func Before(ctx iris.Context) {
 	/*
@@ -9,10 +14,18 @@ func Before(ctx iris.Context) {
 	println("Before the indexHandler or contactHandler: " + requestPath)
 	ctx.Values().Set("info", shareInformation)
 	*/
+	token := model.Token{Ticket: ctx.GetHeader("ticket")}
+	_, err := conf.Orm.Get(&token)
+	if err == nil {}
+	user := model.User{Id:token.UserId}
+	c, err := conf.Orm.Get(&user)
+	if err == nil { print(c) }
+	ctx.Values().Set("user", user)
 	app := ctx.Request().Header.Get("app")
 	if app == "stouch" {
 		ctx.Next()
 	} else {
-		ctx.JSON(map[string]string{"error": "app error"})
+		error_response.NoError.Msg = "app error"
+		ctx.JSON(error_response.NoError)
 	}
 }

@@ -3,7 +3,9 @@ package model
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"fmt"
 	"github.com/google/uuid"
+	"strings"
 	"time"
 )
 
@@ -19,20 +21,28 @@ type User struct {
 	Birthday time.Time  `xorm:"datetime" json:"birthday"`
 }
 
-func getmd5(password string) string {
+func getSalt() string {
 	uuid1, _ := uuid.NewUUID()
+	salt := uuid1.String()
+	return strings.Replace(salt, "-", "", -1)
+}
+
+func getMd5(password string, salt string) string {
 	h := md5.New()
-	h.Write([]byte(uuid1.String() + password))
+	h.Write([]byte(salt + password))
 	cipherStr := h.Sum(nil)
 	return hex.EncodeToString(cipherStr)
 }
 
 func (user *User) SetPassword(password string) {
-	user.Password = getmd5(password)
+	user.Salt = getSalt()
+	user.Password = getMd5(password, user.Salt)
 }
 
 func (user *User) Check(password string) bool {
-	return user.Password == getmd5(password)
+	fmt.Println(user.Password, getMd5(password, user.Salt))
+	fmt.Println(user.Password, getMd5(password, user.Salt))
+	return user.Password == getMd5(password, user.Salt)
 }
 
 
