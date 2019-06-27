@@ -1,6 +1,8 @@
 package error_response
 
-var NoError = errorResponse{Status: true, Msg:"", Code: 0}
+var (
+	NoError = errorResponse{Status: true, Msg:"", Code: 0}
+)
 
 type errorResponse struct {
 	Status bool `json:"status"`
