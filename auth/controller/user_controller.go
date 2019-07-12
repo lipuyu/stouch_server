@@ -2,10 +2,10 @@ package controller
 
 import (
 	"github.com/kataras/iris"
-	"imgo/conf"
+	"stouch_server/conf"
 	"time"
 )
-import "imgo/auth/model"
+import "stouch_server/auth/model"
 
 type UserController struct{
 	Ctx iris.Context

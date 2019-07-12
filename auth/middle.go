@@ -2,9 +2,9 @@ package auth
 
 import (
 	"github.com/kataras/iris"
-	"imgo/auth/model"
-	"imgo/common/error_response"
-	"imgo/conf"
+	"stouch_server/auth/model"
+	"stouch_server/common/error_response"
+	"stouch_server/conf"
 )
 
 func Before(ctx iris.Context) {

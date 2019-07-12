@@ -5,10 +5,10 @@ import (
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/mvc"
-	"imgo/auth"
-	"imgo/auth/controller"
-	"imgo/conf"
-	"imgo/websock"
+	"stouch_server/auth"
+	"stouch_server/auth/controller"
+	"stouch_server/conf"
+	"stouch_server/websock"
 )
 
 func newApp() *iris.Application {
