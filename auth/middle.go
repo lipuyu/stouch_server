@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/kataras/iris"
 	"stouch_server/auth/model"
-	"stouch_server/common/error_response"
+	"stouch_server/common/er"
 	"stouch_server/conf"
 )
 
@@ -15,17 +15,21 @@ func Before(ctx iris.Context) {
 	ctx.Values().Set("info", shareInformation)
 	*/
 	token := model.Token{Ticket: ctx.GetHeader("ticket")}
-	_, err := conf.Orm.Get(&token)
-	if err == nil {}
+	g, err := conf.Orm.Get(&token)
+	if err != nil {
+		conf.Logger.Error(g, err)
+	}
 	user := model.User{Id:token.UserId}
 	c, err := conf.Orm.Get(&user)
-	if err == nil { print(c) }
+	if err != nil {
+		conf.Logger.Error(c, err)
+	}
 	ctx.Values().Set("user", user)
-	app := ctx.Request().Header.Get("app")
-	if app == "stouch" {
+	app := ctx.GetHeader("app")
+	if app == "stouch" || ctx.GetCurrentRoute().ResolvePath() == "/storage/token" {
 		ctx.Next()
 	} else {
-		error_response.NoError.Msg = "app error"
-		ctx.JSON(error_response.NoError)
+		er.NoError.Msg = "app error"
+		ctx.JSON(er.NoError)
 	}
 }
