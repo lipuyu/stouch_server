@@ -5,8 +5,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"github.com/kataras/iris"
-	authModel "stouch_server/auth/model"
-	contentModel "stouch_server/content/model"
 )
 
 var Orm *xorm.Engine
@@ -24,9 +22,6 @@ func loadOrm(c iris.Configuration){
 			iris.RegisterOnInterrupt(func() {
 				err = Orm.Close()
 			})
-			err = Orm.Sync2(new(authModel.User))
-			err = Orm.Sync2(new(authModel.Token))
-			err = Orm.Sync2(new(contentModel.Topic))
 		}
 	}
 }

@@ -8,6 +8,6 @@ type StorageTokenController struct{
 	Ctx iris.Context
 }
 
-func (c *StorageTokenController) Get(ctx iris.Context) interface{}{
+func (c *StorageTokenController) Get() interface{}{
 	return "faker_token"
 }

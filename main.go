@@ -20,6 +20,7 @@ func newApp() *iris.Application {
 	mvc.New(app.Party("/user")).Handle(new(authCt.UserController))
 	mvc.New(app.Party("/content")).Handle(new(contentCt.ContentController))
 	mvc.New(app.Party("/storage/token")).Handle(new(storageCt.StorageTokenController))
+	mvc.New(app.Party("/storage/picture")).Handle(new(storageCt.PictureController))
 	return app
 }
 
