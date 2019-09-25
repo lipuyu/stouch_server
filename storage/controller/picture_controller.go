@@ -1,9 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/kataras/iris"
 	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"stouch_server/common/er"
 	"stouch_server/common/utils"
 	"stouch_server/conf"
@@ -27,20 +29,22 @@ func (c *PictureController) GetBy(id int64) interface{}{
 
 func (c *PictureController) Post() interface{}{
 	file, fileHeader, err := c.Ctx.FormFile("file")
-	file.Seek(0, 0)
-	img, _, err := image.Decode(file)
-	width, height, size := img.Bounds().Max.X, img.Bounds().Max.Y, fileHeader.Size
+	if err != nil {
+		conf.Logger.Error("file is no exist!!!")
+	}
+	img, _, err := image.DecodeConfig(file)
+	width, height, size := img.Width, img.Height, fileHeader.Size
 	file.Seek(0, 0)
 	md5 := utils.GetMD5(file)
 	file.Seek(0, 0)
 	sr := strings.Split(fileHeader.Filename, ".")
 	picture := &model.Picture{Width: width, Height: height, Size:size, Md5:md5, Format: sr[len(sr) - 1]}
-	if  _, err := conf.Orm.Insert(picture); err == nil { } else {
-		conf.Logger.Error(err)
+	if exist := service.Save(md5 + "." + string(sr[len(sr) - 1]), file); !exist {
+		if _, err := conf.Orm.Insert(picture); err == nil {
+		} else {
+			conf.Logger.Error(err)
+		}
 	}
-	if err != nil {
-		fmt.Println(fileHeader.Filename, err)
-	}
-	service.Save(fileHeader.Filename, file)
-	return fileHeader.Filename
+	return er.NoError.SetData(map[string]model.Picture{"picture": *picture})
 }
+git 

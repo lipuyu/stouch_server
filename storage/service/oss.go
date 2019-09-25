@@ -35,15 +35,15 @@ func init() {
 	}
 }
 
-func Save(name string, reader io.Reader){
+func Save(name string, reader io.Reader) bool {
 	isExist, err := bucket.IsObjectExist(name)
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-	fmt.Println(isExist)
 	if !isExist {
 		if err := bucket.PutObject(name, reader); err != nil {
 			conf.Logger.Error("Error:", err)
 		}
 	}
+	return isExist
 }
