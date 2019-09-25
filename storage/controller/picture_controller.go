@@ -47,4 +47,3 @@ func (c *PictureController) Post() interface{}{
 	}
 	return er.NoError.SetData(map[string]model.Picture{"picture": *picture})
 }
-git 
