@@ -14,7 +14,7 @@ type ContentController struct{
 func (c *ContentController) Get() interface{} {
 	topics := make([]model.Topic, 0)
 	if err := conf.Orm.Find(&topics); err == nil {
-		return er.NoError.SetData(map[string][]model.Topic{"topics": topics})
+		return er.Data(map[string][]model.Topic{"topics": topics})
 	} else {
 		return er.SourceNotExistError
 	}
@@ -30,13 +30,13 @@ func (c *ContentController) Post() interface{} {
 		conf.Logger.Error(err)
 		return er.JsonBodyError
 	}
-	return er.NoError.SetData(map[string]model.Topic{"topic": topic})
+	return er.Data(map[string]model.Topic{"topic": topic})
 }
 
 func (c *ContentController) GetBy(id int64) interface{} {
 	topic := model.Topic{Id: id}
 	if ok, _ := conf.Orm.Get(&topic); ok {
-		return er.NoError.SetData(map[string]model.Topic{"topic": topic})
+		return er.Data(map[string]model.Topic{"topic": topic})
 	} else  {
 		return er.SourceNotExistError
 	}

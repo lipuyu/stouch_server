@@ -28,7 +28,7 @@ func (c *UserController) GetGet(ctx iris.Context) interface{}{
 			conf.Cache.Add("user", 500*time.Second, &user)
 		}
 	}
-	return er.NoError.SetData(map[string]model.User{"user": user})
+	return er.Data(map[string]model.User{"user": user})
 }
 
 func (c *UserController) PostSignin() interface{} {
@@ -58,13 +58,13 @@ func (c *UserController) PostSignup() interface{} {
 	} else {
 		conf.Logger.Error(err)
 	}
-	return er.NoError.SetData(map[string]string{"ticket": token.Ticket})
+	return er.Data(map[string]string{"ticket": token.Ticket})
 }
 
 func (c *UserController) GetBy(id int64) interface{}{
 	user := model.User{Id: id}
 	if ok, _ := conf.Orm.Get(&user); ok {
-		return er.NoError.SetData(map[string]model.User{"user": user})
+		return er.Data(map[string]model.User{"user": user})
 	} else  {
 		return er.UserNotExistError
 	}

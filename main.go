@@ -5,6 +5,7 @@ import (
 	"github.com/kataras/iris/middleware/logger"
 	"github.com/kataras/iris/middleware/recover"
 	"github.com/kataras/iris/mvc"
+	appconfCt "stouch_server/appconf/controller"
 	"stouch_server/auth"
 	authCt "stouch_server/auth/controller"
 	"stouch_server/conf"
@@ -17,6 +18,7 @@ func newApp() *iris.Application {
 	app := iris.New()
 	app.Use(recover.New())
 	app.Use(logger.New())
+	mvc.New(app.Party("/appconf")).Handle(new(appconfCt.AppConfController))
 	mvc.New(app.Party("/user")).Handle(new(authCt.UserController))
 	mvc.New(app.Party("/content")).Handle(new(contentCt.ContentController))
 	mvc.New(app.Party("/storage/token")).Handle(new(storageCt.StorageTokenController))

@@ -21,7 +21,7 @@ type PictureController struct{
 func (c *PictureController) GetBy(id int64) interface{}{
 	picture := model.Picture{Id: id}
 	if ok, _ := conf.Orm.Get(&picture); ok {
-		return er.NoError.SetData(map[string]model.Picture{"picture": picture})
+		return er.Data(map[string]model.Picture{"picture": picture})
 	} else  {
 		return er.SourceNotExistError
 	}
@@ -40,10 +40,13 @@ func (c *PictureController) Post() interface{}{
 	sr := strings.Split(fileHeader.Filename, ".")
 	picture := &model.Picture{Width: width, Height: height, Size:size, Md5:md5, Format: sr[len(sr) - 1]}
 	if exist := service.Save(md5 + "." + string(sr[len(sr) - 1]), file); !exist {
-		if _, err := conf.Orm.Insert(picture); err == nil {
-		} else {
+		if _, err := conf.Orm.Insert(picture); err!= nil {
+			conf.Logger.Error(err)
+		}
+	} else {
+		if _, err := conf.Orm.Get(picture); err!= nil {
 			conf.Logger.Error(err)
 		}
 	}
-	return er.NoError.SetData(map[string]model.Picture{"picture": *picture})
+	return er.Data(map[string]model.Picture{"picture": *picture})
 }

@@ -29,7 +29,6 @@ func Before(ctx iris.Context) {
 	if app == "stouch" || ctx.GetCurrentRoute().ResolvePath() == "/storage/token" {
 		ctx.Next()
 	} else {
-		er.NoError.Msg = "app error"
-		ctx.JSON(er.NoError)
+		ctx.JSON(er.AppError)
 	}
 }

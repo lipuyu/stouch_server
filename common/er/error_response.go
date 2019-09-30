@@ -4,6 +4,8 @@ var (
 	NoError = errorResponse{Status: true, Msg:"", Code: 0}
 	ParamsError = errorResponse{Status: false, Msg:"传入参数不对", Code: 1}
 	JsonBodyError = errorResponse{Status: false, Msg:"传入body格式不对", Code: 2}
+	AppError = errorResponse{Status: false, Msg:"App名字不对", Code: 3}
+
 	SourceNotExistError = errorResponse{Status: false, Msg:"资源不存在", Code: 404}
 
 	UserNotExistError = errorResponse{Status: false, Msg:"用户不存在", Code: 1000}
@@ -17,7 +19,6 @@ type errorResponse struct {
 	Code int `json:"code"`
 }
 
-func (error errorResponse) SetData(data interface{}) errorResponse{
-	error.Data = data
-	return error
+func Data(data interface{}) errorResponse {
+	return errorResponse{Status: true, Msg:"", Data:data, Code: 0}
 }
