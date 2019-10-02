@@ -18,6 +18,8 @@ func newApp() *iris.Application {
 	app := iris.New()
 	app.Use(recover.New())
 	app.Use(logger.New())
+	app.Get("/", func(ctx iris.Context) { ctx.Redirect("/web/home.html") })
+	app.StaticWeb("/web", "./static")
 	mvc.New(app.Party("/appconf")).Handle(new(appconfCt.AppConfController))
 	mvc.New(app.Party("/user")).Handle(new(authCt.UserController))
 	mvc.New(app.Party("/content")).Handle(new(contentCt.ContentController))

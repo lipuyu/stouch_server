@@ -12,11 +12,12 @@ Welcome<br/>
 </body>
 
 <script type="text/javascript">
-    var websocket = null;
+    let host = window.location.host;
+    let websocket = null;
 
     //判断当前浏览器是否支持WebSocket
     if('WebSocket' in window){
-        websocket = new WebSocket("ws://127.0.0.1:8080/websocket?user_id=1");
+        websocket = new WebSocket("ws://"+ host + "/websocket?user_id=1");
     }
     else{
         alert('Not support websocket')

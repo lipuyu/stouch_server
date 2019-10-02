@@ -1,10 +1,12 @@
 package auth
 
 import (
+	"fmt"
 	"github.com/kataras/iris"
 	"stouch_server/auth/model"
 	"stouch_server/common/er"
 	"stouch_server/conf"
+	"strings"
 )
 
 func Before(ctx iris.Context) {
@@ -26,7 +28,10 @@ func Before(ctx iris.Context) {
 	}
 	ctx.Values().Set("user", user)
 	app := ctx.GetHeader("app")
-	if app == "stouch" || ctx.GetCurrentRoute().ResolvePath() == "/storage/token" {
+	path := ctx.GetCurrentRoute().ResolvePath()
+	fmt.Println(path, strings.HasPrefix(path, "web/"))
+	if app == "stouch" || path == "/storage/token" || path == "/" || strings.HasPrefix(path, "/web/") ||
+		strings.HasPrefix(path, "/websocket"){
 		ctx.Next()
 	} else {
 		ctx.JSON(er.AppError)
