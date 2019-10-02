@@ -39,12 +39,12 @@ func (c *PictureController) Post() interface{}{
 	file.Seek(0, 0)
 	sr := strings.Split(fileHeader.Filename, ".")
 	picture := &model.Picture{Width: width, Height: height, Size:size, Md5:md5, Format: sr[len(sr) - 1]}
-	if exist := service.Save(md5 + "." + string(sr[len(sr) - 1]), file); !exist {
-		if _, err := conf.Orm.Insert(picture); err!= nil {
+	if service.GetOrSave(md5 + "." + string(sr[len(sr) - 1]), file){
+		if _, err := conf.Orm.Get(picture); err!= nil {
 			conf.Logger.Error(err)
 		}
 	} else {
-		if _, err := conf.Orm.Get(picture); err!= nil {
+		if _, err := conf.Orm.Insert(picture); err!= nil {
 			conf.Logger.Error(err)
 		}
 	}

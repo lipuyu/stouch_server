@@ -35,7 +35,7 @@ func init() {
 	}
 }
 
-func Save(name string, reader io.Reader) bool {
+func GetOrSave(name string, reader io.Reader) bool {
 	isExist, err := bucket.IsObjectExist(name)
 	if err != nil {
 		fmt.Println("Error:", err)
