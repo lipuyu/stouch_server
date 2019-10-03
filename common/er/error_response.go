@@ -10,6 +10,7 @@ var (
 
 	UserNotExistError = errorResponse{Status: false, Msg:"用户不存在", Code: 1000}
 	PasswordError = errorResponse{Status: false, Msg:"用户密码不对", Code: 1001}
+	UserNameRepeatError = errorResponse{Status: false, Msg:"用户名已经存在", Code: 1002}
 )
 
 type errorResponse struct {

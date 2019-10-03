@@ -13,21 +13,13 @@ type UserController struct{
 	Ctx iris.Context
 }
 
-func (c *UserController) GetGet(ctx iris.Context) interface{}{
-	user := model.User{Id:2}
+func (c *UserController) Get(ctx iris.Context) interface{}{
 	/*
 	user1 := model.User{}
 	ctx.ReadJSON(&user1)
 	fmt.Println(user1)
 	*/
-	res, err := conf.Cache.Value("user")
-	if err == nil {
-		user = *res.Data().(*model.User)
-	} else {
-		if ok, _ := conf.Orm.Get(&user); ok {
-			conf.Cache.Add("user", 500*time.Second, &user)
-		}
-	}
+	user := ctx.Values().Get("user").(model.User)
 	return er.Data(map[string]model.User{"user": user})
 }
 
@@ -37,7 +29,9 @@ func (c *UserController) PostSignin() interface{} {
 	user := model.User{Username: username}
 	if ok, _ := conf.Orm.Get(&user); ok {
 		if user.Check(password){
-			return map[string]bool{"rt": true}
+			token := model.Token{UserId: user.Id, Ticket: utils.GetUUID()}
+			conf.Orm.Insert(token)
+			return er.Data(map[string]string{"ticket": token.Ticket})
 		} else {
 			return er.PasswordError
 		}
@@ -52,6 +46,9 @@ func (c *UserController) PostSignup() interface{} {
 	user := &model.User{Username: username, CreatedAt: time.Now()}
 	user.SetPassword(password)
 	var token model.Token
+	if has, _ := conf.Orm.Get(&model.User{Username: username}); has {
+		return er.UserNameRepeatError
+	}
 	if  _, err := conf.Orm.Insert(user); err == nil {
 		token = model.Token{UserId: user.Id, Ticket: utils.GetUUID()}
 		conf.Orm.Insert(token)

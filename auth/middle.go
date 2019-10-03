@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"github.com/kataras/iris"
 	"stouch_server/auth/model"
 	"stouch_server/common/er"
@@ -16,20 +15,24 @@ func Before(ctx iris.Context) {
 	println("Before the indexHandler or contactHandler: " + requestPath)
 	ctx.Values().Set("info", shareInformation)
 	*/
-	token := model.Token{Ticket: ctx.GetHeader("ticket")}
-	g, err := conf.Orm.Get(&token)
-	if err != nil {
-		conf.Logger.Error(g, err)
-	}
-	user := model.User{Id:token.UserId}
-	c, err := conf.Orm.Get(&user)
-	if err != nil {
-		conf.Logger.Error(c, err)
+	ticket := ctx.GetHeader("ticket")
+	var user model.User
+	if ticket == "" {
+		user = model.User{}
+	} else {
+		token := model.Token{Ticket: ticket}
+		if g, err := conf.Orm.Get(&token);  err == nil && g {
+			user = model.User{Id: token.UserId}
+			if c, err := conf.Orm.Get(&user); err != nil || !c{
+				user = model.User{}
+			}
+		} else {
+			user = model.User{}
+		}
 	}
 	ctx.Values().Set("user", user)
 	app := ctx.GetHeader("app")
 	path := ctx.GetCurrentRoute().ResolvePath()
-	fmt.Println(path, strings.HasPrefix(path, "web/"))
 	if app == "stouch" || path == "/storage/token" || path == "/" || strings.HasPrefix(path, "/web/") ||
 		strings.HasPrefix(path, "/websocket"){
 		ctx.Next()
