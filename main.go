@@ -12,6 +12,7 @@ import (
 	contentCt "stouch_server/content/controller"
 	storageCt "stouch_server/storage/controller"
 	"stouch_server/websock"
+	bookCt "stouch_server/websock/controller"
 )
 
 func newApp() *iris.Application {
@@ -25,6 +26,7 @@ func newApp() *iris.Application {
 	mvc.New(app.Party("/content")).Handle(new(contentCt.ContentController))
 	mvc.New(app.Party("/storage/token")).Handle(new(storageCt.StorageTokenController))
 	mvc.New(app.Party("/storage/picture")).Handle(new(storageCt.PictureController))
+	mvc.New(app.Party("/book")).Handle(new(bookCt.BookController))
 	return app
 }
 

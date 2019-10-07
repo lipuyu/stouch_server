@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/websocket"
+	authM "stouch_server/auth/model"
 )
 
 func SetupWebsocket(app *iris.Application) {
@@ -23,11 +24,19 @@ func SetupWebsocket(app *iris.Application) {
 	app.Get("/websocket", ws.Handler())
 }
 
-var connMap = map[int]websocket.Connection{}
+var connMap = map[int64]websocket.Connection{}
+
+func Send(ids []int64, message string)  {
+	for _, id := range ids {
+		if conn, ok := connMap[id]; ok {
+			conn.Write(1, []byte(message))
+		}
+	}
+}
 
 func handleConnection(conn websocket.Connection) {
-	userId, _ := conn.Context().Params().GetInt("user_id")
-	connMap[userId] = conn
+	user := conn.Context().Values().Get("user").(authM.User)
+	connMap[1] = conn
 	// Read events from browser
 	conn.OnMessage(func(msg []byte) {
 		fmt.Printf("%s sent: %s\n", conn.Context().RemoteAddr(), msg)
@@ -37,6 +46,6 @@ func handleConnection(conn websocket.Connection) {
 		}
 	})
 	conn.OnDisconnect(func () {
-		delete(connMap, userId)
+		delete(connMap, user.Id)
 	})
 }

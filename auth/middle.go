@@ -33,8 +33,8 @@ func Before(ctx iris.Context) {
 	ctx.Values().Set("user", user)
 	app := ctx.GetHeader("app")
 	path := ctx.GetCurrentRoute().ResolvePath()
-	if app == "stouch" || path == "/storage/token" || path == "/" || strings.HasPrefix(path, "/web/") ||
-		strings.HasPrefix(path, "/websocket"){
+	if (app == "stouch" && user.Id != 0) || path == "/storage/token" || path == "/" ||
+		strings.HasPrefix(path, "/web/") || strings.HasPrefix(path, "/websocket"){
 		ctx.Next()
 	} else {
 		ctx.JSON(er.AppError)

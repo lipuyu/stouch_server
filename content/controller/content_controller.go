@@ -1,10 +1,14 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/kataras/iris"
 	"stouch_server/common/er"
 	"stouch_server/conf"
 	"stouch_server/content/model"
+	"stouch_server/websock"
+	"stouch_server/websock/datalayer"
+	"strconv"
 )
 
 type ContentController struct{
@@ -40,4 +44,18 @@ func (c *ContentController) GetBy(id int64) interface{} {
 	} else  {
 		return er.SourceNotExistError
 	}
+}
+
+func (c *ContentController) PostByComment(id int64) interface{} {
+	var ids []int64
+	if results, err := conf.Redis.SMembers(datalayer.GetBookContentKey(id)).Result();  err == nil{
+		for _, val := range results {
+			if id, err := strconv.ParseInt(val, 10, 64); err == nil {
+				ids = append(ids, id)
+			}
+		}
+	}
+	websock.Send(ids, c.Ctx.PostValue("comment"))
+	fmt.Println(ids, c.Ctx.PostValue("comment"))
+	return er.Data(map[string]bool{"result": true})
 }

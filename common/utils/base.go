@@ -25,3 +25,11 @@ func GetMD5(file io.Reader) string {
 	}
 	return md5str1
 }
+
+func If(ok bool, a interface{}, b interface{}) interface{} {
+	if ok {
+		return a
+	} else {
+		return b
+	}
+}
