@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/kataras/iris"
+	model2 "stouch_server/auth/model"
 	"stouch_server/common/er"
 	"stouch_server/conf"
 	"stouch_server/content/model"
@@ -17,7 +17,7 @@ type ContentController struct{
 
 func (c *ContentController) Get() interface{} {
 	topics := make([]model.Topic, 0)
-	if err := conf.Orm.Find(&topics); err == nil {
+	if err := conf.Orm.Desc("id").Find(&topics); err == nil {
 		return er.Data(map[string][]model.Topic{"topics": topics})
 	} else {
 		return er.SourceNotExistError
@@ -27,6 +27,7 @@ func (c *ContentController) Get() interface{} {
 func (c *ContentController) Post() interface{} {
 	topic := model.Topic{}
 	if err := c.Ctx.ReadJSON(&topic); err == nil {
+		topic.UserId = c.Ctx.Values().Get("user").(model2.User).Id
 		if _, err = conf.Orm.Insert(&topic); err != nil {
 			conf.Logger.Error(err)
 		}
@@ -56,6 +57,5 @@ func (c *ContentController) PostByComment(id int64) interface{} {
 		}
 	}
 	websock.Send(ids, c.Ctx.PostValue("comment"))
-	fmt.Println(ids, c.Ctx.PostValue("comment"))
 	return er.Data(map[string]bool{"result": true})
 }
