@@ -36,7 +36,7 @@ func Send(ids []int64, message string)  {
 
 func handleConnection(conn websocket.Connection) {
 	user := conn.Context().Values().Get("user").(authM.User)
-	connMap[1] = conn
+	connMap[user.Id] = conn
 	// Read events from browser
 	conn.OnMessage(func(msg []byte) {
 		fmt.Printf("%s sent: %s\n", conn.Context().RemoteAddr(), msg)

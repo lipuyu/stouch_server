@@ -15,7 +15,17 @@ func Before(ctx iris.Context) {
 	println("Before the indexHandler or contactHandler: " + requestPath)
 	ctx.Values().Set("info", shareInformation)
 	*/
+	path := ctx.GetCurrentRoute().ResolvePath()
 	ticket := ctx.GetHeader("ticket")
+	app := ctx.GetHeader("app")
+
+	// websocket 信息进行特殊处理
+	if strings.HasPrefix(path,"/websocket") {
+		ticket, _ = ctx.URLParams()["ticket"]
+		app, _ = ctx.URLParams()["ticket"]
+	}
+
+	// 读取user信息
 	var user model.User
 	if ticket == "" {
 		user = model.User{}
@@ -31,10 +41,10 @@ func Before(ctx iris.Context) {
 		}
 	}
 	ctx.Values().Set("user", user)
-	app := ctx.GetHeader("app")
-	path := ctx.GetCurrentRoute().ResolvePath()
+
+	// URL 拦截
 	if (app == "stouch" && user.Id != 0) || path == "/storage/token" || path == "/" ||
-		strings.HasPrefix(path, "/web/") || strings.HasPrefix(path, "/websocket"){
+		strings.HasPrefix(path, "/user/sign") || strings.HasPrefix(path, "/web/") {
 		ctx.Next()
 	} else {
 		ctx.JSON(er.AppError)

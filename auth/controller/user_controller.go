@@ -24,8 +24,10 @@ func (c *UserController) Get(ctx iris.Context) interface{}{
 }
 
 func (c *UserController) PostSignin() interface{} {
-	username := c.Ctx.PostValue("username")
-	password := c.Ctx.PostValue("password")
+	jsonData := map[string]string{"username": "", "password": ""}
+	c.Ctx.ReadJSON(&jsonData)
+	username, _ := jsonData["username"]
+	password, _ := jsonData["password"]
 	user := model.User{Username: username}
 	if ok, _ := conf.Orm.Get(&user); ok {
 		if user.Check(password){
@@ -41,8 +43,10 @@ func (c *UserController) PostSignin() interface{} {
 }
 
 func (c *UserController) PostSignup() interface{} {
-	username := c.Ctx.PostValue("username")
-	password := c.Ctx.PostValue("password")
+	jsonData := map[string]string{"username": "", "password": ""}
+	c.Ctx.ReadJSON(&jsonData)
+	username, _ := jsonData["username"]
+	password, _ := jsonData["password"]
 	user := &model.User{Username: username, CreatedAt: time.Now()}
 	user.SetPassword(password)
 	var token model.Token

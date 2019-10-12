@@ -3,7 +3,6 @@ package model
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
 	"stouch_server/common/utils"
 	"time"
 )
@@ -33,8 +32,6 @@ func (user *User) SetPassword(password string) {
 }
 
 func (user *User) Check(password string) bool {
-	fmt.Println(user.Password, getMd5(password, user.Salt))
-	fmt.Println(user.Password, getMd5(password, user.Salt))
 	return user.Password == getMd5(password, user.Salt)
 }
 
