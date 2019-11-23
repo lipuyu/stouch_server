@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"github.com/kataras/iris"
 	"stouch_server/auth/model"
 	"stouch_server/common/er"
@@ -22,8 +23,9 @@ func Before(ctx iris.Context) {
 	// websocket 信息进行特殊处理
 	if strings.HasPrefix(path,"/websocket") {
 		ticket, _ = ctx.URLParams()["ticket"]
-		app, _ = ctx.URLParams()["ticket"]
+		app, _ = ctx.URLParams()["app"]
 	}
+	fmt.Println(ticket, app, "end")
 
 	// 读取user信息
 	var user model.User
@@ -44,7 +46,8 @@ func Before(ctx iris.Context) {
 
 	// URL 拦截
 	if (app == "stouch" && user.Id != 0) || path == "/storage/token" || path == "/" ||
-		strings.HasPrefix(path, "/user/sign") || strings.HasPrefix(path, "/web/") {
+		ctx.Method() == "OPTIONS" || strings.HasPrefix(path, "/user/sign") ||
+		strings.HasPrefix(path, "/web/") {
 		ctx.Next()
 	} else {
 		ctx.JSON(er.AppError)

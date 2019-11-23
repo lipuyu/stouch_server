@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/kataras/iris"
 	"stouch_server/auth/model"
 	"stouch_server/common/er"
 	"stouch_server/conf"
+	"stouch_server/websock"
 	"stouch_server/websock/datalayer"
 	"strconv"
 )
@@ -24,6 +24,15 @@ func (c *BookController) PostContentBy(id int64) interface{}{
 	}
 	conf.Redis.Set(bookKey, id, 0)
 	conf.Redis.SAdd(datalayer.GetBookContentKey(id), user.Id)
-	fmt.Println(conf.Redis.SMembers(datalayer.GetBookContentKey(id)).String())
+
+	var ids []int64
+	if results, err := conf.Redis.SMembers(datalayer.GetBookContentKey(id)).Result();  err == nil{
+		for _, val := range results {
+			if id, err := strconv.ParseInt(val, 10, 64); err == nil {
+				ids = append(ids, id)
+			}
+		}
+	}
+	websock.Send(ids, strconv.Itoa(len(ids)) + "个人正在看这条内容，你可以与他们沟通。")
 	return er.Data(map[string]bool{"result": true})
 }
