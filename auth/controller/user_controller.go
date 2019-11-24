@@ -70,3 +70,8 @@ func (c *UserController) GetBy(id int64) interface{}{
 		return er.UserNotExistError
 	}
 }
+
+func (c *UserController) GetVerificationCode() interface{}{
+	user := c.Ctx.Values().Get("user").(model.User)
+	return er.UserNotExistError
+}
