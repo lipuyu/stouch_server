@@ -32,7 +32,7 @@ func newApp() *iris.Application {
 	app.Use(allowAllOrigins)
 	app.AllowMethods(iris.MethodOptions)
 
-	app.Get("/", func(ctx iris.Context) { ctx.Redirect("/web/index.html") })
+	app.Get("/", func(ctx iris.Context) { ctx.Redirect("http://airport.xiaorere.com/index.html") })
 	app.StaticWeb("/web", "./static")
 	mvc.New(app.Party("/appconf")).Handle(new(appconfCt.AppConfController))
 	mvc.New(app.Party("/user")).Handle(new(authCt.UserController))
