@@ -48,9 +48,10 @@ func (c *ContentController) GetBy(id int64) interface{} {
 }
 
 func (c *ContentController) PostByComment(id int64) interface{} {
-	jsonData := map[string]string{"comment": ""}
-	c.Ctx.ReadJSON(&jsonData)
-	comment, _ := jsonData["comment"]
+	jsonData := struct {Comment string `json:"comment"`}{}
+	if err := c.Ctx.ReadJSON(&jsonData); err != nil {
+		return er.ParamsError
+	}
 	var ids []int64
 	if results, err := conf.Redis.SMembers(datalayer.GetBookContentKey(id)).Result(); err == nil {
 		for _, val := range results {
@@ -59,6 +60,6 @@ func (c *ContentController) PostByComment(id int64) interface{} {
 			}
 		}
 	}
-	websock.Send(ids, comment)
+	websock.Send(ids, jsonData.Comment)
 	return er.Data(map[string]bool{"result": true})
 }
