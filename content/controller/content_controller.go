@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/kataras/iris"
 	model2 "stouch_server/auth/model"
+	"stouch_server/common/base"
 	"stouch_server/common/er"
 	"stouch_server/conf"
 	"stouch_server/content/model"
@@ -18,7 +19,7 @@ type ContentController struct {
 func (c *ContentController) Get() interface{} {
 	topics := make([]model.Topic, 0)
 	if err := conf.Orm.Limit(10, 0).Desc("id").Find(&topics); err == nil {
-		return er.Data(map[string][]model.Topic{"topics": topics})
+		return re.NewByData(map[string][]model.Topic{"topics": topics})
 	} else {
 		return er.SourceNotExistError
 	}
@@ -35,13 +36,13 @@ func (c *ContentController) Post() interface{} {
 		conf.Logger.Error(err)
 		return er.JsonBodyError
 	}
-	return er.Data(map[string]model.Topic{"topic": topic})
+	return re.NewByData(map[string]model.Topic{"topic": topic})
 }
 
 func (c *ContentController) GetBy(id int64) interface{} {
 	topic := model.Topic{Id: id}
 	if ok, _ := conf.Orm.Get(&topic); ok {
-		return er.Data(map[string]model.Topic{"topic": topic})
+		return re.NewByData(map[string]model.Topic{"topic": topic})
 	} else {
 		return er.SourceNotExistError
 	}
@@ -61,5 +62,5 @@ func (c *ContentController) PostByComment(id int64) interface{} {
 		}
 	}
 	websock.Send(ids, jsonData.Comment)
-	return er.Data(map[string]bool{"result": true})
+	return re.NewByData(map[string]bool{"result": true})
 }

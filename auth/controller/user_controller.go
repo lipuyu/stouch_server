@@ -4,6 +4,7 @@ import (
 	"github.com/kataras/iris"
 	"math/rand"
 	"stouch_server/auth/model"
+	"stouch_server/common/base"
 	"stouch_server/common/er"
 	"stouch_server/common/utils"
 	"stouch_server/conf"
@@ -22,7 +23,7 @@ func (c *UserController) Get(ctx iris.Context) interface{}{
 	fmt.Println(user1)
 	*/
 	user := ctx.Values().Get("user").(model.User)
-	return er.Data(map[string]model.User{"user": user})
+	return re.NewByData(map[string]model.User{"user": user})
 }
 
 func (c *UserController) PostSignin() interface{} {
@@ -35,19 +36,19 @@ func (c *UserController) PostSignin() interface{} {
 		if user.Check(password){
 			token := model.Token{UserId: user.Id, Ticket: utils.GetUUID()}
 			conf.Orm.Insert(token)
-			return er.Data(map[string]string{"ticket": token.Ticket})
+			return re.NewByData(map[string]string{"ticket": token.Ticket})
 		} else {
-			return er.PasswordError
+			return re.NewByError(er.PasswordError)
 		}
 	} else {
-		return er.UserNotExistError
+		return re.NewByError(er.UserNotExistError)
 	}
 }
 
 func (c *UserController) PostSignup() interface{} {
 	jsonData := map[string]string{"username": "", "password": ""}
 	if err := c.Ctx.ReadJSON(&jsonData); err != nil {
-		return er.ParamsError
+		return re.NewByError(er.ParamsError)
 	}
 	username, _ := jsonData["username"]
 	password, _ := jsonData["password"]
@@ -55,7 +56,7 @@ func (c *UserController) PostSignup() interface{} {
 	user.SetPassword(password)
 	var token model.Token
 	if has, _ := conf.Orm.Get(&model.User{Username: username}); has {
-		return er.UserNameRepeatError
+		return re.NewByError(er.UserNameRepeatError)
 	}
 	if  _, err := conf.Orm.Insert(user); err == nil {
 		token = model.Token{UserId: user.Id, Ticket: utils.GetUUID()}
@@ -63,15 +64,15 @@ func (c *UserController) PostSignup() interface{} {
 	} else {
 		conf.Logger.Error(err)
 	}
-	return er.Data(map[string]string{"ticket": token.Ticket})
+	return re.NewByData(map[string]string{"ticket": token.Ticket})
 }
 
 func (c *UserController) GetBy(id int64) interface{}{
 	user := model.User{Id: id}
 	if ok, _ := conf.Orm.Get(&user); ok {
-		return er.Data(map[string]model.User{"user": user})
+		return re.NewByData(map[string]model.User{"user": user})
 	} else  {
-		return er.UserNotExistError
+		return re.NewByError(er.UserNotExistError)
 	}
 }
 
@@ -79,7 +80,7 @@ func (c *UserController) GetVerificationCode() interface{}{
 	jsonData := struct {Mobile string `json:"mobile"`}{}
 	if err := c.Ctx.ReadJSON(&jsonData); err != nil {
 		conf.Logger.Error(err)
-		return er.ParamsError
+		return re.NewByError(er.ParamsError)
 	}
 	a := rand.Int63n(900000) + 100000
 	code := model.VerificationCode{
@@ -91,7 +92,7 @@ func (c *UserController) GetVerificationCode() interface{}{
 		conf.Logger.Error(err)
 	}
 	// conf.SendSMS(jsonData.Mobile, a)
-	return er.Data(iris.Map{"result": true})
+	return re.NewByData(iris.Map{"result": true})
 }
 
 func (c *UserController) PostCodeCheck() interface{}{
@@ -99,7 +100,7 @@ func (c *UserController) PostCodeCheck() interface{}{
 	jsonData := struct{Mobile string `json:"mobile"`; Code string `json:"code"`}{}
 	if err := c.Ctx.ReadJSON(&jsonData); err != nil {
 		conf.Logger.Error(err)
-		return er.ParamsError
+		return re.NewByError(er.ParamsError)
 	}
 	code := model.VerificationCode{Mobile: jsonData.Mobile}
 	if _, err := conf.Orm.Desc("id").Get(&code); err != nil {
@@ -109,8 +110,8 @@ func (c *UserController) PostCodeCheck() interface{}{
 	if code.Code == jsonData.Code && time.Now().Unix() - code.ValidTime < 300 {
 		user.Mobile = jsonData.Mobile
 		conf.Orm.Id(user.Id).Cols("mobile").Update(&user)
-		return er.Data(iris.Map{"result": true})
+		return re.NewByData(iris.Map{"result": true})
 	} else {
-		return er.Data(iris.Map{"result": false})
+		return re.NewByData(iris.Map{"result": false})
 	}
 }

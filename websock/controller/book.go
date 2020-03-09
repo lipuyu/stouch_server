@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/kataras/iris"
 	"stouch_server/auth/model"
-	"stouch_server/common/er"
+	"stouch_server/common/base"
 	"stouch_server/common/utils"
 	"stouch_server/conf"
 	"stouch_server/websock"
@@ -39,5 +39,5 @@ func (c *BookController) PostContentBy(id int64) interface{}{
 	if len(closeIds) != 0 {
 		conf.Redis.SRem(datalayer.GetBookContentKey(id), utils.TransIntsToInterface(closeIds)...)
 	}
-	return er.Data(map[string]bool{"result": true})
+	return re.NewByData(iris.Map{"result": true})
 }
