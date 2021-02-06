@@ -11,7 +11,7 @@ import (
 
 var bucket *oss.Bucket
 
-func init() {
+func init_copy() {
 	// 创建OSSClient实例。
 	c := conf.Config
 	client, err := oss.New(c.Other["EndPoint"].(string), c.Other["AccessKeyID"].(string), c.Other["AccessKeySecret"].(string))

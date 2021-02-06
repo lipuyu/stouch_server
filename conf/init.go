@@ -20,5 +20,5 @@ func loadAll(c iris.Configuration) {
 	loadRedis(c)
 	loadCache()
 	loadOrm(c)
-	loadClient(c)
+	// loadClient(c)
 }
