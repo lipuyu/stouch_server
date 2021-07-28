@@ -24,7 +24,7 @@ require (
 	github.com/kataras/golog v0.0.10
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/klauspost/compress v1.9.4 // indirect
-	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
+	github.com/microcosm-cc/bluemonday v1.0.5 // indirect
 	github.com/muesli/cache2go v0.0.0-20191019095710-4098a3aa8c94
 	github.com/ryanuber/columnize v2.1.0+incompatible // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
