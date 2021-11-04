@@ -3,3 +3,4 @@ static/*
 go.sum
 .idea/*
 main
+.DS_Store
