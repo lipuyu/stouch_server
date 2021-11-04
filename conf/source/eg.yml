@@ -1,19 +1,14 @@
-DisablePathCorrection: false
-EnablePathEscape: false
-FireMethodNotAllowed: true
-DisableBodyConsumptionOnUnmarshal: true
-TimeFormat: Mon, 01 Jan 2006 15:04:05 GMT
-Charset: UTF-8
+redis:
+  node: localhost:6379
+  db: 0
+  password:
 
-Other:
-  Name: lipuyu
-  DataSourceName: root:@/imgo
+database:
+  driverName: mysql
+  url: root:@/imgo
 
-  RedisAddr: localhost:6379
-  RedisPassword:
-  RedisDB: 0
-
-  EndPoint: your_endpoint
-  AccessKeyID: your_accesskeyid
-  AccessKeySecret: your_accesskeysecret
-  BucketName: your_bucket
+oss:
+  endPoint: your_endpoint
+  accessKeyId: your_accesskeyid
+  accessKeySecret: your_accesskeysecret
+  bucketName: your_bucket

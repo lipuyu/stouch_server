@@ -13,15 +13,14 @@ var bucket *oss.Bucket
 
 func init_copy() {
 	// 创建OSSClient实例。
-	c := conf.Config
-	client, err := oss.New(c.Other["EndPoint"].(string), c.Other["AccessKeyID"].(string), c.Other["AccessKeySecret"].(string))
+	client, err := oss.New(conf.Config.Oss.EndPoint, conf.Config.Oss.AccessKeyId, conf.Config.Oss.AccessKeySecret)
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(-1)
 	}
 
 	// 获取存储空间。
-	bucket, err = client.Bucket("lipuyu")
+	bucket, err = client.Bucket(conf.Config.Oss.BucketName)
 	if err != nil {
 		fmt.Println("Error:", err)
 		os.Exit(-1)

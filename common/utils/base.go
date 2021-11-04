@@ -26,6 +26,7 @@ func GetMD5(file io.Reader) string {
 	return md5str1
 }
 
+// 与三目操作符不太一样，没有短路操作
 func If(ok bool, a interface{}, b interface{}) interface{} {
 	if ok {
 		return a
