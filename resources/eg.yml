@@ -1,0 +1,15 @@
+logFile: gin.log
+redis:
+  node: localhost:6379
+  db: 0
+  password:
+
+database:
+  driverName: mysql
+  url: root:@/imgo
+
+oss:
+  endPoint: your_endpoint
+  accessKeyId: your_accesskeyid
+  accessKeySecret: your_accesskeysecret
+  bucketName: your_bucket
