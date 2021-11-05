@@ -48,7 +48,7 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusTemporaryRedirect, "http://airport.xiaorere.com/index.html")
 	})
-	r.Static("/static", "./static")
+	r.Static("/static", "./resources/static")
 	appconfCt.AddRoutes(r.Group("/appconf"))
 	authCt.AddRoutes(r.Group("/auth"))
 

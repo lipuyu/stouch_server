@@ -14,23 +14,19 @@ import (
 	"time"
 )
 
-type UserController struct{
-	Ctx iris.Context
-}
-
-func (c *UserController) Get(ctx iris.Context) interface{}{
+func Get(c *gin.Context){
 	/*
 	user1 := model.User{}
 	ctx.ReadJSON(&user1)
 	fmt.Println(user1)
 	*/
-	user := ctx.Values().Get("user").(model2.User)
-	return re.NewByData(map[string]model2.User{"user": user})
+	user := c.MustGet("user")
+	c.JSON(http.StatusOK, re.NewByData(gin.H{"user": user}))
 }
 
-func (c *UserController) PostSignin() interface{} {
+func PostSignin(c *gin.Context){
 	jsonData := map[string]string{"username": "", "password": ""}
-	c.Ctx.ReadJSON(&jsonData)
+	_ = c.ShouldBindJSON(&jsonData)
 	username, _ := jsonData["username"]
 	password, _ := jsonData["password"]
 	user := model2.User{Username: username}
@@ -38,19 +34,19 @@ func (c *UserController) PostSignin() interface{} {
 		if user.Check(password){
 			token := model2.Token{UserId: user.Id, Ticket: utils.GetUUID()}
 			core.Orm.Insert(token)
-			return re.NewByData(map[string]string{"ticket": token.Ticket})
+			c.JSON(http.StatusOK, re.NewByData(gin.H{"ticket": token.Ticket}))
 		} else {
-			return re.NewByError(er.PasswordError)
+			c.JSON(http.StatusOK, re.NewByError(er.PasswordError))
 		}
 	} else {
-		return re.NewByError(er.UserNotExistError)
+		c.JSON(http.StatusOK, re.NewByError(er.UserNotExistError))
 	}
 }
 
-func (c *UserController) PostSignup() interface{} {
+func PostSignup(c *gin.Context) {
 	jsonData := map[string]string{"username": "", "password": ""}
-	if err := c.Ctx.ReadJSON(&jsonData); err != nil {
-		return re.NewByError(er.ParamsError)
+	if err := c.ShouldBindJSON(&jsonData); err != nil {
+		c.JSON(http.StatusOK, re.NewByError(er.ParamsError))
 	}
 	username, _ := jsonData["username"]
 	password, _ := jsonData["password"]
@@ -58,14 +54,15 @@ func (c *UserController) PostSignup() interface{} {
 	user.SetPassword(password)
 	var token model2.Token
 	if has, _ := core.Orm.Get(&model2.User{Username: username}); has {
-		return re.NewByError(er.UserNameRepeatError)
+		c.JSON(http.StatusOK, re.NewByError(er.UserNameRepeatError))
+		return
 	}
 	if  _, err := core.Orm.Insert(user); err == nil {
 		token = model2.Token{UserId: user.Id, Ticket: utils.GetUUID()}
 		core.Orm.Insert(token)
 	} else {
 	}
-	return re.NewByData(map[string]string{"ticket": token.Ticket})
+	c.JSON(http.StatusOK, re.NewByData(gin.H{"ticket": token.Ticket}))
 }
 
 func GetBy(c *gin.Context){
@@ -78,10 +75,11 @@ func GetBy(c *gin.Context){
 	}
 }
 
-func (c *UserController) GetVerificationCode() interface{}{
+func GetVerificationCode(c *gin.Context){
 	jsonData := struct {Mobile string `json:"mobile"`}{}
-	if err := c.Ctx.ReadJSON(&jsonData); err != nil {
-		return re.NewByError(er.ParamsError)
+	if err := c.ShouldBindJSON(&jsonData); err != nil {
+		c.JSON(http.StatusOK, re.NewByError(er.ParamsError))
+		return
 	}
 	a := rand.Int63n(900000) + 100000
 	code := model2.VerificationCode{
@@ -92,14 +90,15 @@ func (c *UserController) GetVerificationCode() interface{}{
 	if _, err := core.Orm.Insert(code); err != nil {
 	}
 	// core.SendSMS(jsonData.Mobile, a)
-	return re.NewByData(iris.Map{"result": true})
+	c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
 }
 
-func (c *UserController) PostCodeCheck() interface{}{
-	user := c.Ctx.Values().Get("user").(model2.User)
+func PostCodeCheck(c *gin.Context){
+	user := c.MustGet("user").(model2.User)
 	jsonData := struct{Mobile string `json:"mobile"`; Code string `json:"code"`}{}
-	if err := c.Ctx.ReadJSON(&jsonData); err != nil {
-		return re.NewByError(er.ParamsError)
+	if err := c.ShouldBindJSON(&jsonData); err != nil {
+		c.JSON(http.StatusOK, re.NewByError(er.ParamsError))
+		return
 	}
 	code := model2.VerificationCode{Mobile: jsonData.Mobile}
 	if _, err := core.Orm.Desc("id").Get(&code); err != nil {
@@ -107,8 +106,8 @@ func (c *UserController) PostCodeCheck() interface{}{
 	if code.Code == jsonData.Code && time.Now().Unix() - code.ValidTime < 300 {
 		user.Mobile = jsonData.Mobile
 		core.Orm.Id(user.Id).Cols("mobile").Update(&user)
-		return re.NewByData(iris.Map{"result": true})
+		c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
 	} else {
-		return re.NewByData(iris.Map{"result": false})
+		c.JSON(http.StatusOK, re.NewByData(iris.Map{"result": false}))
 	}
 }
