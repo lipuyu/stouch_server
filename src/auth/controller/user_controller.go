@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func Get(c *gin.Context){
+func get(c *gin.Context){
 	/*
 	user1 := model.User{}
 	ctx.ReadJSON(&user1)
@@ -24,7 +24,7 @@ func Get(c *gin.Context){
 	c.JSON(http.StatusOK, re.NewByData(gin.H{"user": user}))
 }
 
-func PostSignin(c *gin.Context){
+func postSignin(c *gin.Context){
 	jsonData := map[string]string{"username": "", "password": ""}
 	_ = c.ShouldBindJSON(&jsonData)
 	username, _ := jsonData["username"]
@@ -43,7 +43,7 @@ func PostSignin(c *gin.Context){
 	}
 }
 
-func PostSignup(c *gin.Context) {
+func postSignup(c *gin.Context) {
 	jsonData := map[string]string{"username": "", "password": ""}
 	if err := c.ShouldBindJSON(&jsonData); err != nil {
 		c.JSON(http.StatusOK, re.NewByError(er.ParamsError))
@@ -65,7 +65,7 @@ func PostSignup(c *gin.Context) {
 	c.JSON(http.StatusOK, re.NewByData(gin.H{"ticket": token.Ticket}))
 }
 
-func GetBy(c *gin.Context){
+func getBy(c *gin.Context){
 	user := model2.User{}
 	_ = c.ShouldBindUri(&user)
 	if ok, _ := core.Orm.Get(&user); ok {
@@ -75,7 +75,7 @@ func GetBy(c *gin.Context){
 	}
 }
 
-func GetVerificationCode(c *gin.Context){
+func getVerificationCode(c *gin.Context){
 	jsonData := struct {Mobile string `json:"mobile"`}{}
 	if err := c.ShouldBindJSON(&jsonData); err != nil {
 		c.JSON(http.StatusOK, re.NewByError(er.ParamsError))
@@ -93,7 +93,7 @@ func GetVerificationCode(c *gin.Context){
 	c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
 }
 
-func PostCodeCheck(c *gin.Context){
+func postCodeCheck(c *gin.Context){
 	user := c.MustGet("user").(model2.User)
 	jsonData := struct{Mobile string `json:"mobile"`; Code string `json:"code"`}{}
 	if err := c.ShouldBindJSON(&jsonData); err != nil {

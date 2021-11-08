@@ -5,9 +5,10 @@ import (
 )
 
 func AddRoutes(rg *gin.RouterGroup) {
-	rg.GET("/user/:id", GetBy)
-	rg.POST("/signin", PostSignin)
-	rg.POST("/signup", PostSignup)
-	rg.GET("/verification/code", GetVerificationCode)
-	rg.POST("/code/check", PostCodeCheck)
+	rg.GET("", get)
+	rg.GET("/user/:id", getBy)
+	rg.POST("/signin", postSignin)
+	rg.POST("/signup", postSignup)
+	rg.GET("/verification/code", getVerificationCode)
+	rg.POST("/code/check", postCodeCheck)
 }

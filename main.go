@@ -33,9 +33,7 @@ func newApp() *iris.Application {
 	app.Use(allowAllOrigins)
 	app.AllowMethods(iris.MethodOptions)
 	app.StaticWeb("/web", "./static")
-	mvc.New(app.Party("/content")).Handle(new(contentCt.ContentController))
 	mvc.New(app.Party("/storage/token")).Handle(new(storageCt.StorageTokenController))
-	mvc.New(app.Party("/storage/picture")).Handle(new(storageCt.PictureController))
 	mvc.New(app.Party("/book")).Handle(new(bookCt.BookController))
 	return app
 }
@@ -51,7 +49,8 @@ func main() {
 	r.Static("/static", "./resources/static")
 	appconfCt.AddRoutes(r.Group("/appconf"))
 	authCt.AddRoutes(r.Group("/auth"))
-
+	contentCt.AddRoutes(r.Group("/content"))
+	storageCt.AddRoutes(r.Group("/storage/picture"))
 	// 定时任务
 	go core.Run()
 	err := r.Run()
