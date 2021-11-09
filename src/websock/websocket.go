@@ -1,36 +1,21 @@
 package websock
 
 import (
-	"fmt"
-	"github.com/kataras/iris"
-	"github.com/kataras/iris/websocket"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"log"
 	authM "stouch_server/src/auth/model"
 )
 
-func SetupWebsocket(app *iris.Application) {
-	// create our echo websocket server
-	ws := websocket.New(websocket.Config{
-		// These are low-level optionally fields,
-		// user/client can't see those values.
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
-		// only javascript client-side code has the same rule,
-		// which you serve using the ws.ClientSource (see below).
-		EvtMessagePrefix: []byte("my-custom-prefix:"),
-	})
-	ws.OnConnection(handleConnection)
-	// register the server on an endpoint.
-	// see the inline javascript code in the websockets.html, this endpoint is used to connect to the server.
-	app.Get("/websocket", ws.Handler())
-}
+var connMap = map[int64]*websocket.Conn{}
 
-var connMap = map[int64]websocket.Connection{}
+var upgrader = websocket.Upgrader{}
 
 func Send(ids []int64, message string) []int64 {
 	var closeIds []int64
 	for _, id := range ids {
 		if conn, ok := connMap[id]; ok {
-			if err := conn.Write(1, []byte(message)); err != nil {
+			if err := conn.WriteMessage(1, []byte(message)); err != nil {
 			}
 		} else {
 			closeIds = append(closeIds, id)
@@ -39,18 +24,31 @@ func Send(ids []int64, message string) []int64 {
 	return closeIds
 }
 
-func handleConnection(conn websocket.Connection) {
-	user := conn.Context().Values().Get("user").(authM.User)
-	connMap[user.Id] = conn
-	// Read events from browser
-	conn.OnMessage(func(msg []byte) {
-		fmt.Printf("%s sent: %s\n", conn.Context().RemoteAddr(), msg)
-		err := conn.Write(1, []byte("你好"))
-		if err !=nil {
-			print(err)
+func handleConnection(c *gin.Context) {
+	con, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		log.Print("upgrade:", err)
+		return
+	}
+	defer con.Close()
+	for {
+		mt, message, err := con.ReadMessage()
+		if err != nil {
+			log.Println("read:", err)
+			break
 		}
-	})
-	conn.OnDisconnect(func () {
-		delete(connMap, user.Id)
-	})
+		log.Printf("recv: %s", message)
+		err = con.WriteMessage(mt, message)
+		if err != nil {
+			log.Println("write:", err)
+			break
+		}
+	}
+	user := c.MustGet("user").(authM.User)
+	connMap[user.Id] = con
+	defer delete(connMap, user.Id)
+}
+
+func AddRoutes(rg *gin.RouterGroup) {
+	rg.GET("", handleConnection)
 }

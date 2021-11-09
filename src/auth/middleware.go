@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	model2 "stouch_server/src/auth/model"
+	re "stouch_server/src/common/base"
 	"stouch_server/src/common/er"
 	"stouch_server/src/core"
 	"strings"
@@ -12,7 +13,7 @@ import (
 
 func Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		path := c.Request.RequestURI
+		path := c.Request.URL.Path
 		ticket := c.GetHeader("ticket")
 		app := c.GetHeader("src")
 
@@ -43,10 +44,12 @@ func Middleware() gin.HandlerFunc {
 		// URL 拦截
 		if (app == "stouch" && user.Id != 0) || path == "/storage/token" || path == "/storage/picture/editor" ||
 			path == "/" || c.Request.Method == "OPTIONS" || strings.HasPrefix(path, "/user/sign") ||
-			strings.HasPrefix(path, "/web/") {
+			strings.HasPrefix(path, "/static/") {
 			c.Next()
 		} else {
-			c.JSON(http.StatusOK, er.AppError)
+			c.Abort()
+			c.JSON(http.StatusOK, re.NewByError(er.AppError))
+			return
 		}
 	}
 }

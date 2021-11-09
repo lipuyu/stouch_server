@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	_ "github.com/asim/go-micro/v3"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	appconfCt "stouch_server/src/appconf/controller"
@@ -12,6 +11,7 @@ import (
 	"stouch_server/src/core"
 	"stouch_server/src/core/middlewares"
 	storageCt "stouch_server/src/storage/controller"
+	"stouch_server/src/websock"
 	bookCt "stouch_server/src/websock/controller"
 )
 
@@ -27,14 +27,18 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusTemporaryRedirect, "http://airport.xiaorere.com/index.html")
 	})
+
 	r.Static("/static", "./resources/static")
 	appconfCt.AddRoutes(r.Group("/appconf"))
 	authCt.AddRoutes(r.Group("/auth"))
 	contentCt.AddRoutes(r.Group("/content"))
 	storageCt.AddRoutes(r.Group("/storage/picture"))
 	bookCt.AddRoutes(r.Group("/book"))
+	websock.AddRoutes(r.Group("/websocket"))
+
 	// 定时任务
 	go core.Run()
+	// 主程序
 	err := r.Run()
 	if err != nil {
 		fmt.Println(err)
