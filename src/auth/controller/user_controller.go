@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kataras/iris"
 	"math/rand"
 	"net/http"
 	model2 "stouch_server/src/auth/model"
@@ -108,6 +107,6 @@ func postCodeCheck(c *gin.Context){
 		core.Orm.Id(user.Id).Cols("mobile").Update(&user)
 		c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
 	} else {
-		c.JSON(http.StatusOK, re.NewByData(iris.Map{"result": false}))
+		c.JSON(http.StatusOK, re.NewByData(gin.H{"result": false}))
 	}
 }
