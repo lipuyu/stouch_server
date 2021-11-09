@@ -1,13 +1,10 @@
 package controller
 
 import (
-	"github.com/kataras/iris"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-type StorageTokenController struct{
-	Ctx iris.Context
-}
-
-func (c *StorageTokenController) Get() interface{}{
-	return "faker_token"
+func Get(c *gin.Context) {
+	c.JSON(http.StatusOK,"faker_token")
 }

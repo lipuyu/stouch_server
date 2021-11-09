@@ -1,4 +1,5 @@
 logFile: gin.log
+
 redis:
   node: localhost:6379
   db: 0

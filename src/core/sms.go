@@ -3,16 +3,14 @@ package core
 import (
 	"fmt"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
-	"github.com/kataras/iris"
 )
 
 
 var client *dysmsapi.Client
 
 
-func loadClient(c iris.Configuration) {
-	client, _ = dysmsapi.NewClientWithAccessKey("cn-hangzhou", c.Other["AccessKeyID"].(string),
-		c.Other["AccessKeySecret"].(string))
+func loadClient(c Configuration) {
+	client, _ = dysmsapi.NewClientWithAccessKey("cn-hangzhou", c.Oss.AccessKeyId, c.Oss.AccessKeySecret)
 }
 
 func SendSMS(phoneNumber string, code int64){

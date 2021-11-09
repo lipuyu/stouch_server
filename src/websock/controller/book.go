@@ -1,7 +1,8 @@
 package controller
 
 import (
-	"github.com/kataras/iris"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"stouch_server/src/auth/model"
 	"stouch_server/src/common/base"
 	"stouch_server/src/common/utils"
@@ -11,13 +12,9 @@ import (
 	"strconv"
 )
 
-type BookController struct{
-	Ctx iris.Context
-}
-
-
-func (c *BookController) PostContentBy(id int64) interface{}{
-	user := c.Ctx.Values().Get("user").(model.User)
+func postContentBy(c *gin.Context) {
+	user := c.MustGet("user").(model.User)
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	bookKey := datalayer2.GetHaveBookContentKey(user.Id)
 	if contentId, err := core.Redis.Get(bookKey).Result(); err == nil {
 		contentId1, _ := strconv.ParseInt(contentId, 10, 64)
@@ -27,7 +24,7 @@ func (c *BookController) PostContentBy(id int64) interface{}{
 	core.Redis.SAdd(datalayer2.GetBookContentKey(id), user.Id)
 
 	var ids []int64
-	if results, err := core.Redis.SMembers(datalayer2.GetBookContentKey(id)).Result();  err == nil{
+	if results, err := core.Redis.SMembers(datalayer2.GetBookContentKey(id)).Result(); err == nil {
 		for _, val := range results {
 			if id, err := strconv.ParseInt(val, 10, 64); err == nil {
 				ids = append(ids, id)
@@ -38,5 +35,5 @@ func (c *BookController) PostContentBy(id int64) interface{}{
 	if len(closeIds) != 0 {
 		core.Redis.SRem(datalayer2.GetBookContentKey(id), utils.TransIntsToInterface(closeIds)...)
 	}
-	return re.NewByData(iris.Map{"result": true})
+	c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
 }

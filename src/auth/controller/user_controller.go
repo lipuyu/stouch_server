@@ -89,7 +89,7 @@ func getVerificationCode(c *gin.Context){
 	}
 	if _, err := core.Orm.Insert(code); err != nil {
 	}
-	// core.SendSMS(jsonData.Mobile, a)
+	core.SendSMS(jsonData.Mobile, a)
 	c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
 }
 

@@ -31,5 +31,5 @@ func loadAll(c Configuration) {
 	loadRedis(c)
 	loadCache()
 	loadOrm(c)
-	// loadClient(c)
+	loadClient(c)
 }
