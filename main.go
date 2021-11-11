@@ -18,11 +18,8 @@ import (
 func main() {
 	// 禁用控制台颜色，将日志写入文件时不需要控制台颜色。
 	gin.DisableConsoleColor()
-	r := gin.Default()
-	// 跨域
-	r.Use(middlewares.Cors())
-	// 权限验证
-	r.Use(auth.Middleware())
+	r := gin.New()
+	r.Use(middlewares.Log(), gin.Recovery(), middlewares.Cors(), auth.Middleware())
 	// 加路由
 	r.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusTemporaryRedirect, "http://airport.xiaorere.com/index.html")
