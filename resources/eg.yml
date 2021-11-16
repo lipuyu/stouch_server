@@ -14,3 +14,7 @@ oss:
   accessKeyId: your_accesskeyid
   accessKeySecret: your_accesskeysecret
   bucketName: your_bucket
+
+log:
+  level: debug
+  logFileName: stdout

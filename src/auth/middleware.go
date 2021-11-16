@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	model2 "stouch_server/src/auth/model"
@@ -22,7 +21,6 @@ func Middleware() gin.HandlerFunc {
 			ticket = c.Query("ticket")
 			app = c.Query("src")
 		}
-		fmt.Println(ticket, app, "end")
 
 		// 读取user信息
 		var user model2.User

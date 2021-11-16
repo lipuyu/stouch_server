@@ -13,11 +13,10 @@ import (
 	storageCt "stouch_server/src/storage/controller"
 	"stouch_server/src/websock"
 	bookCt "stouch_server/src/websock/controller"
+	"time"
 )
 
 func main() {
-	// 禁用控制台颜色，将日志写入文件时不需要控制台颜色。
-	gin.DisableConsoleColor()
 	r := gin.New()
 	r.Use(middlewares.Log(), gin.Recovery(), middlewares.Cors(), auth.Middleware())
 	// 加路由
@@ -34,9 +33,17 @@ func main() {
 	websock.AddRoutes(r.Group("/websocket"))
 
 	// 定时任务
+	gin.SetMode(core.Config.Application.Mode)
 	go core.Run()
+	s := &http.Server{
+		Addr:           core.Config.Application.Addr,
+		Handler:        r,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
 	// 主程序
-	err := r.Run()
+	err := s.ListenAndServe()
 	if err != nil {
 		fmt.Println(err)
 	}

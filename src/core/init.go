@@ -32,4 +32,5 @@ func loadAll(c Configuration) {
 	loadCache()
 	loadOrm(c)
 	loadClient(c)
+	loadLogConf(c)
 }

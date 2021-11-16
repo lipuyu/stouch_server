@@ -20,4 +20,15 @@ type Configuration struct {
 		AccessKeySecret string `yaml:"accessKeySecret"`
 		BucketName string `yaml:"bucketName"`
 	}
+
+	Log struct {
+		Level string `yaml:"level"`
+		LogFileName string `yaml:"logFileName"`
+		LogFilePath string `yaml:"logFilePath"`
+	}
+
+	Application struct {
+		Addr string `yaml:"addr"`
+		Mode string `yaml:"mode"`
+	}
 }
