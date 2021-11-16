@@ -17,6 +17,7 @@ import (
 )
 
 func main() {
+	gin.SetMode(core.Config.Application.Mode)
 	r := gin.New()
 	r.Use(middlewares.Log(), gin.Recovery(), middlewares.Cors(), auth.Middleware())
 	// 加路由
@@ -33,7 +34,6 @@ func main() {
 	websock.AddRoutes(r.Group("/websocket"))
 
 	// 定时任务
-	gin.SetMode(core.Config.Application.Mode)
 	go core.Run()
 	s := &http.Server{
 		Addr:           core.Config.Application.Addr,
