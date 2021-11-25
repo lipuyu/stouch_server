@@ -1,0 +1,7 @@
+*.yml
+lib/core/static/*
+go.sum
+.idea/*
+main
+.DS_Store
+*.log

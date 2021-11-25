@@ -1,0 +1,23 @@
+application:
+  mode: debug
+  addr: :8000
+
+redis:
+  node: localhost:6379
+  db: 0
+  password:
+
+database:
+  driverName: mysql
+  url: root:123456@/imgo
+
+oss:
+  endPoint: your_endpoint
+  accessKeyId: your_accesskeyid
+  accessKeySecret: your_accesskeysecret
+  bucketName: your_bucket
+
+log:
+  level: debug
+  logFileName: stdout
+  logFilePath: ./
