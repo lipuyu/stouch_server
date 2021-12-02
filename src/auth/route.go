@@ -7,7 +7,7 @@ import (
 
 func AddRoutes(rg *gin.RouterGroup) {
 	rg.GET("", controller.Get)
-	rg.GET("/user/:id", controller.GetBy)
+	rg.GET("/:id", controller.GetBy)
 	rg.POST("/signin", controller.PostSignin)
 	rg.POST("/signup", controller.PostSignup)
 	rg.GET("/verification/code", controller.GetVerificationCode)

@@ -1,4 +1,4 @@
-package websock
+package service
 
 import (
 	"github.com/gin-gonic/gin"
@@ -49,6 +49,6 @@ func handleConnection(c *gin.Context) {
 	defer delete(connMap, user.Id)
 }
 
-func AddRoutes(rg *gin.RouterGroup) {
+func AddWebsocketRoutes(rg *gin.RouterGroup) {
 	rg.GET("", handleConnection)
 }

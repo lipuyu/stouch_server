@@ -7,8 +7,8 @@ import (
 	"stouch_server/src/common/base"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
-	"stouch_server/src/websock"
 	datalayer2 "stouch_server/src/websock/datalayer"
+	"stouch_server/src/websock/service"
 	"strconv"
 )
 
@@ -31,7 +31,7 @@ func PostContentBy(c *gin.Context) {
 			}
 		}
 	}
-	closeIds := websock.Send(ids, strconv.Itoa(len(ids)) + "个人正在看这条内容，你可以与他们沟通。")
+	closeIds := service.Send(ids, strconv.Itoa(len(ids)) + "个人正在看这条内容，你可以与他们沟通。")
 	if len(closeIds) != 0 {
 		core.Redis.SRem(datalayer2.GetBookContentKey(id), utils.TransIntsToInterface(closeIds)...)
 	}

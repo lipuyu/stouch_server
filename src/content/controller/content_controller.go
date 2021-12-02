@@ -8,8 +8,8 @@ import (
 	"stouch_server/src/common/er"
 	model3 "stouch_server/src/content/model"
 	"stouch_server/src/core"
-	"stouch_server/src/websock"
 	"stouch_server/src/websock/datalayer"
+	"stouch_server/src/websock/service"
 	"strconv"
 )
 
@@ -63,6 +63,6 @@ func PostByComment(c *gin.Context) {
 			}
 		}
 	}
-	websock.Send(ids, jsonData.Comment)
+	service.Send(ids, jsonData.Comment)
 	c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
 }
