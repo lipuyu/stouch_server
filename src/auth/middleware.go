@@ -14,12 +14,12 @@ func Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := c.Request.URL.Path
 		ticket := c.GetHeader("ticket")
-		app := c.GetHeader("src")
+		app := c.GetHeader("app")
 
 		// websocket 信息进行特殊处理
 		if strings.HasPrefix(path, "/websocket") {
 			ticket = c.Query("ticket")
-			app = c.Query("src")
+			app = c.Query("app")
 		}
 
 		// 读取user信息
