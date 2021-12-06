@@ -3,8 +3,8 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	model2 "stouch_server/src/auth/model"
-	re "stouch_server/src/common/base"
+	"stouch_server/src/auth/model"
+	"stouch_server/src/common/re"
 	"stouch_server/src/common/er"
 	"stouch_server/src/core"
 	"strings"
@@ -23,18 +23,18 @@ func Middleware() gin.HandlerFunc {
 		}
 
 		// 读取user信息
-		var user model2.User
+		var user model.User
 		if ticket == "" {
-			user = model2.User{}
+			user = model.User{}
 		} else {
-			token := model2.Token{Ticket: ticket}
+			token := model.Token{Ticket: ticket}
 			if g, err := core.Orm.Get(&token); err == nil && g {
-				user = model2.User{Id: token.UserId}
+				user = model.User{Id: token.UserId}
 				if c, err := core.Orm.Get(&user); err != nil || !c {
-					user = model2.User{}
+					user = model.User{}
 				}
 			} else {
-				user = model2.User{}
+				user = model.User{}
 			}
 		}
 		c.Set("user", user)

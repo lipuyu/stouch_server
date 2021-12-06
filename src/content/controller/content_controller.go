@@ -3,10 +3,10 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	model2 "stouch_server/src/auth/model"
-	"stouch_server/src/common/base"
+	authModel "stouch_server/src/auth/model"
 	"stouch_server/src/common/er"
-	model3 "stouch_server/src/content/model"
+	"stouch_server/src/common/re"
+	"stouch_server/src/content/model"
 	"stouch_server/src/core"
 	"stouch_server/src/websock/datalayer"
 	"stouch_server/src/websock/service"
@@ -14,7 +14,7 @@ import (
 )
 
 func Get(c *gin.Context) {
-	topics := make([]model3.Topic, 0)
+	topics := make([]model.Topic, 0)
 	if err := core.Orm.Limit(10, 0).Desc("id").Find(&topics); err == nil {
 		c.JSON(http.StatusOK, re.NewByData(gin.H{"topics": topics}))
 	} else {
@@ -23,9 +23,9 @@ func Get(c *gin.Context) {
 }
 
 func Post(c *gin.Context) {
-	topic := model3.Topic{}
+	topic := model.Topic{}
 	if err := c.ShouldBindJSON(&topic); err == nil {
-		topic.UserId = c.MustGet("user").(model2.User).Id
+		topic.UserId = c.MustGet("user").(authModel.User).Id
 		if _, err = core.Orm.Insert(&topic); err != nil {
 		}
 	} else {
@@ -36,7 +36,7 @@ func Post(c *gin.Context) {
 }
 
 func GetBy(c *gin.Context) {
-	topic := model3.Topic{}
+	topic := model.Topic{}
 	_ = c.ShouldBindUri(&topic)
 	if ok, _ := core.Orm.Get(&topic); ok {
 		c.JSON(http.StatusOK, re.NewByData(gin.H{"topic": topic}))

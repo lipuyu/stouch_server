@@ -1,7 +1,7 @@
 package re
 
 import (
-	er2 "stouch_server/src/common/er"
+	"stouch_server/src/common/er"
 )
 
 type ResponseResult struct {
@@ -15,7 +15,7 @@ func NewByData(data interface{}) ResponseResult {
 	return ResponseResult{Status: true, Msg:"", Data:data, Code: 0}
 }
 
-func NewByError(error er2.Error) ResponseResult {
+func NewByError(error er.Error) ResponseResult {
 	result := ResponseResult{Status: false, Msg: error.Msg, Code: error.Code}
 	return result
 }
