@@ -11,6 +11,7 @@ import (
 	"stouch_server/src/core/middlewares"
 	"stouch_server/src/storage"
 	"stouch_server/src/websock"
+	"stouch_server/src/websock/service"
 	"time"
 )
 
@@ -26,11 +27,11 @@ func main() {
 
 	r.Static("/static", "./resources/static")
 	appconf.AddRoutes(r.Group("/appconf"))
-	auth.AddRoutes(r.Group("/auth"))
+	auth.AddRoutes(r.Group("/user"))
 	content.AddRoutes(r.Group("/content"))
 	storage.AddRoutes(r.Group("/storage/picture"))
 	websock.AddRoutes(r.Group("/book"))
-	websock.AddRoutes(r.Group("/websocket"))
+	service.AddWebsocketRoutes(r.Group("/websocket"))
 
 	// 定时任务
 	go core.Run()

@@ -7,12 +7,12 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 	"net/http"
-	"stouch_server/src/common/base"
 	"stouch_server/src/common/er"
+	"stouch_server/src/common/re"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
-	model2 "stouch_server/src/storage/model"
-	service2 "stouch_server/src/storage/service"
+	"stouch_server/src/storage/model"
+	"stouch_server/src/storage/service"
 	"strconv"
 	"strings"
 )
@@ -23,7 +23,7 @@ func GetBy(c *gin.Context){
 		c.JSON(http.StatusNotFound, "")
 		return
 	}
-	picture := model2.Picture{Id: id}
+	picture := model.Picture{Id: id}
 	if ok, _ := core.Orm.Get(&picture); ok {
 		c.JSON(http.StatusOK, re.NewByData(gin.H{"picture": picture}))
 	} else {
@@ -41,8 +41,8 @@ func Post(c *gin.Context) {
 	md5 := utils.GetMD5(file)
 	file.Seek(0, 0)
 	sr := strings.Split(fileHeader.Filename, ".")
-	picture := &model2.Picture{Width: width, Height: height, Size: size, Md5: md5, Format: sr[len(sr)-1]}
-	if service2.GetOrSave(md5+"."+string(sr[len(sr)-1]), file) {
+	picture := &model.Picture{Width: width, Height: height, Size: size, Md5: md5, Format: sr[len(sr)-1]}
+	if service.GetOrSave(md5+"."+string(sr[len(sr)-1]), file) {
 		if _, err := core.Orm.Get(picture); err != nil {
 		}
 	} else {
@@ -62,8 +62,8 @@ func PostEditor(c *gin.Context) {
 	md5 := utils.GetMD5(file)
 	file.Seek(0, 0)
 	sr := strings.Split(fileHeader.Filename, ".")
-	picture := &model2.Picture{Width: width, Height: height, Size: size, Md5: md5, Format: sr[len(sr)-1]}
-	if service2.GetOrSave(md5+"."+sr[len(sr)-1], file) {
+	picture := &model.Picture{Width: width, Height: height, Size: size, Md5: md5, Format: sr[len(sr)-1]}
+	if service.GetOrSave(md5+"."+sr[len(sr)-1], file) {
 		if _, err := core.Orm.Get(picture); err != nil {
 		}
 	} else {

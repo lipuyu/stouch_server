@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
-	model2 "stouch_server/src/auth/model"
-	"stouch_server/src/common/base"
+	"stouch_server/src/auth/model"
 	"stouch_server/src/common/er"
+	"stouch_server/src/common/re"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
 	"strconv"
@@ -28,10 +28,10 @@ func PostSignin(c *gin.Context){
 	_ = c.ShouldBindJSON(&jsonData)
 	username, _ := jsonData["username"]
 	password, _ := jsonData["password"]
-	user := model2.User{Username: username}
+	user := model.User{Username: username}
 	if ok, _ := core.Orm.Get(&user); ok {
 		if user.Check(password){
-			token := model2.Token{UserId: user.Id, Ticket: utils.GetUUID()}
+			token := model.Token{UserId: user.Id, Ticket: utils.GetUUID()}
 			core.Orm.Insert(token)
 			c.JSON(http.StatusOK, re.NewByData(gin.H{"ticket": token.Ticket}))
 		} else {
@@ -49,15 +49,15 @@ func PostSignup(c *gin.Context) {
 	}
 	username, _ := jsonData["username"]
 	password, _ := jsonData["password"]
-	user := &model2.User{Username: username, CreatedAt: time.Now()}
+	user := &model.User{Username: username, CreatedAt: time.Now()}
 	user.SetPassword(password)
-	var token model2.Token
-	if has, _ := core.Orm.Get(&model2.User{Username: username}); has {
+	var token model.Token
+	if has, _ := core.Orm.Get(&model.User{Username: username}); has {
 		c.JSON(http.StatusOK, re.NewByError(er.UserNameRepeatError))
 		return
 	}
 	if  _, err := core.Orm.Insert(user); err == nil {
-		token = model2.Token{UserId: user.Id, Ticket: utils.GetUUID()}
+		token = model.Token{UserId: user.Id, Ticket: utils.GetUUID()}
 		core.Orm.Insert(token)
 	} else {
 	}
@@ -65,7 +65,7 @@ func PostSignup(c *gin.Context) {
 }
 
 func GetBy(c *gin.Context){
-	user := model2.User{}
+	user := model.User{}
 	_ = c.ShouldBindUri(&user)
 	if ok, _ := core.Orm.Get(&user); ok {
 		c.JSON(http.StatusOK, re.NewByData(gin.H{"user": user}))
@@ -81,7 +81,7 @@ func GetVerificationCode(c *gin.Context){
 		return
 	}
 	a := rand.Int63n(900000) + 100000
-	code := model2.VerificationCode{
+	code := model.VerificationCode{
 		Mobile: jsonData.Mobile,
 		Code: strconv.FormatInt(a,10),
 		ValidTime: time.Now().Unix(),
@@ -93,13 +93,13 @@ func GetVerificationCode(c *gin.Context){
 }
 
 func PostCodeCheck(c *gin.Context){
-	user := c.MustGet("user").(model2.User)
+	user := c.MustGet("user").(model.User)
 	jsonData := struct{Mobile string `json:"mobile"`; Code string `json:"code"`}{}
 	if err := c.ShouldBindJSON(&jsonData); err != nil {
 		c.JSON(http.StatusOK, re.NewByError(er.ParamsError))
 		return
 	}
-	code := model2.VerificationCode{Mobile: jsonData.Mobile}
+	code := model.VerificationCode{Mobile: jsonData.Mobile}
 	if _, err := core.Orm.Desc("id").Get(&code); err != nil {
 	}
 	if code.Code == jsonData.Code && time.Now().Unix() - code.ValidTime < 300 {
