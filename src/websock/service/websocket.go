@@ -41,6 +41,8 @@ func handleConnection(c *gin.Context) {
 			core.Logger.Error("read websocket message: ", err)
 			break
 		}
+		core.Logger.Info(string(message))
+		core.Logger.Error("error test:", string(message))
 		err = con.WriteMessage(mt, []byte(" recv over: "+string(message)))
 		if err != nil {
 			core.Logger.Error("write to websocket:", err)
