@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"stouch_server/src/auth/model"
-	"stouch_server/src/common/re"
 	"stouch_server/src/common/er"
+	"stouch_server/src/common/re"
 	"stouch_server/src/core"
 	"strings"
 )

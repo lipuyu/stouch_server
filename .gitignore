@@ -5,3 +5,5 @@ go.sum
 main
 .DS_Store
 *.log
+*.log.error
+q
