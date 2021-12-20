@@ -22,7 +22,7 @@ func main() {
 
 	// 加路由
 	r.GET("/", func(c *gin.Context) {
-		c.Redirect(http.StatusTemporaryRedirect, "http://www.duanzt.com/index.html")
+		c.Redirect(http.StatusTemporaryRedirect, "static/index.html")
 	})
 
 	r.Static("/static", "./resources/static")
