@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"gopkg.in/fatih/set.v0"
 	authM "stouch_server/src/auth/model"
 	"stouch_server/src/core"
 )
@@ -51,6 +52,37 @@ func handleConnection(c *gin.Context) {
 	}
 }
 
+var connSet = set.New(set.ThreadSafe)
+
+func handleConnectionAll(c *gin.Context) {
+	con, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		core.Logger.Error("upgrade:", err)
+		return
+	}
+	connSet.Add(con)
+	defer con.Close()
+	defer connSet.Remove(con)
+	for {
+		mt, message, err := con.ReadMessage()
+		if err != nil {
+			core.Logger.Error("read websocket message: ", err)
+			break
+		}
+		core.Logger.Info(string(message))
+		core.Logger.Error("error test:", string(message))
+		connSet.Each(func(conTmp interface{}) bool {
+			_ = conTmp.(*websocket.Conn).WriteMessage(mt, []byte(" recv over: "+string(message)))
+			return true
+		})
+		if err != nil {
+			core.Logger.Error("write to websocket:", err)
+			break
+		}
+	}
+}
+
+
 func AddWebsocketRoutes(rg *gin.RouterGroup) {
-	rg.GET("", handleConnection)
+	rg.GET("", handleConnectionAll)
 }

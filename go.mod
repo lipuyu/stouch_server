@@ -17,5 +17,6 @@ require (
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.2.0
 	github.com/whiteshtef/clockwork v0.0.0-20200221012748-027e62affd84
+	gopkg.in/fatih/set.v0 v0.2.1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
