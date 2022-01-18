@@ -16,6 +16,5 @@ func NewByData(data interface{}) ResponseResult {
 }
 
 func NewByError(error er.Error) ResponseResult {
-	result := ResponseResult{Status: false, Msg: error.Msg, Code: error.Code}
-	return result
+	return ResponseResult{Status: false, Msg: error.Msg, Code: error.Code}
 }
