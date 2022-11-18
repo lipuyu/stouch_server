@@ -9,7 +9,7 @@ import (
 
 var Config = Configuration{}
 
-func init(){
+func init() {
 	env := "test"
 	if len(os.Args) >= 2 {
 		env = os.Args[1]
@@ -24,13 +24,12 @@ func init(){
 	} else {
 		os.Exit(-1)
 	}
-	fmt.Println("config info:", Config)
 }
 
 func loadAll(c Configuration) {
+	fmt.Println("init... config info:", Config)
 	loadRedis(c)
 	loadCache()
 	loadOrm(c)
-	loadClient(c)
 	loadLogConf(c)
 }
