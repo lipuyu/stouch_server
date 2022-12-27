@@ -30,7 +30,7 @@ func Log() gin.HandlerFunc {
 		core.Logger.WithFields(logrus.Fields{
 			"req_uri":      reqUrl,
 			"status_code":  statusCode,
-			"latency_time": latencyTime,
+			"latency_time": latencyTime.String(),
 			"client_ip":    clientIP,
 			"req_method":   reqMethod,
 		}).Info()
