@@ -41,7 +41,8 @@ func Middleware() gin.HandlerFunc {
 
 		// URL 拦截
 		if (app == "stouch" && user.Id != 0) || path == "/" || c.Request.Method == "OPTIONS" ||
-			strings.HasPrefix(path, "/user/sign") || strings.HasPrefix(path, "/static/") {
+			strings.HasPrefix(path, "/user/sign") || strings.HasPrefix(path, "/static/") ||
+			strings.HasPrefix(path, "/test/") {
 			c.Next()
 		} else {
 			c.Abort()
