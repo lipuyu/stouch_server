@@ -21,3 +21,5 @@ log:
   level: debug
   logFileName: stdout
   logFilePath: ./
+
+static_root: ./resources/static
