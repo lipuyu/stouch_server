@@ -24,7 +24,7 @@ func main() {
 		c.Redirect(http.StatusTemporaryRedirect, "static/index.html")
 	})
 
-	r.Static("/static", "./resources/static")
+	r.Static("/static", core.Config.StaticRoot)
 	appconf.AddRoutes(r.Group("/appconf"))
 	auth.AddRoutes(r.Group("/user"))
 	content.AddRoutes(r.Group("/content"))

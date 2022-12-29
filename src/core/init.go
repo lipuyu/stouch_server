@@ -10,12 +10,12 @@ import (
 var Config = Configuration{}
 
 func init() {
-	env := "test"
+	confFile := "./resources/test.yml"
 	if len(os.Args) >= 2 {
-		env = os.Args[1]
+		confFile = os.Args[1]
 	}
 
-	if data, err := ioutil.ReadFile("./resources/" + env + ".yml"); err == nil {
+	if data, err := ioutil.ReadFile(confFile); err == nil {
 		if err = yaml.Unmarshal(data, &Config); err == nil {
 			loadAll(Config)
 		} else {
