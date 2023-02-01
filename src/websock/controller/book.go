@@ -31,9 +31,9 @@ func PostContentBy(c *gin.Context) {
 			}
 		}
 	}
-	closeIds := service.Send(ids, strconv.Itoa(len(ids)) + "个人正在看这条内容，你可以与他们沟通。")
+	closeIds := service.Send(ids, strconv.Itoa(len(ids))+"个人正在看这条内容，你可以与他们沟通。")
 	if len(closeIds) != 0 {
 		core.Redis.SRem(datalayer.GetBookContentKey(id), utils.TransIntsToInterface(closeIds)...)
 	}
-	c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
+	c.JSON(http.StatusOK, re.Data(gin.H{"result": true}))
 }

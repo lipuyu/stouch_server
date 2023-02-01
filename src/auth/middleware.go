@@ -46,7 +46,7 @@ func Middleware() gin.HandlerFunc {
 			c.Next()
 		} else {
 			c.Abort()
-			c.JSON(http.StatusOK, re.NewByError(er.AppError))
+			c.JSON(http.StatusOK, re.Error(er.AppError))
 			return
 		}
 	}
