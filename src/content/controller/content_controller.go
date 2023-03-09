@@ -16,7 +16,7 @@ import (
 func Get(c *gin.Context) {
 	topics := make([]model.Topic, 0)
 	if err := core.Orm.Limit(10, 0).Desc("id").Find(&topics); err == nil {
-		c.JSON(http.StatusOK, re.NewByData(gin.H{"topics": topics}))
+		c.JSON(http.StatusOK, re.Data(gin.H{"topics": topics}))
 	} else {
 		c.JSON(http.StatusOK, er.SourceNotExistError)
 	}
@@ -32,21 +32,23 @@ func Post(c *gin.Context) {
 		c.JSON(http.StatusOK, er.JsonBodyError)
 		return
 	}
-	c.JSON(http.StatusOK, re.NewByData(gin.H{"topic": topic}))
+	c.JSON(http.StatusOK, re.Data(gin.H{"topic": topic}))
 }
 
 func GetBy(c *gin.Context) {
 	topic := model.Topic{}
 	_ = c.ShouldBindUri(&topic)
 	if ok, _ := core.Orm.Get(&topic); ok {
-		c.JSON(http.StatusOK, re.NewByData(gin.H{"topic": topic}))
+		c.JSON(http.StatusOK, re.Data(gin.H{"topic": topic}))
 	} else {
 		c.JSON(http.StatusOK, er.SourceNotExistError)
 	}
 }
 
 func PostByComment(c *gin.Context) {
-	jsonData := struct {Comment string `json:"comment"`}{}
+	jsonData := struct {
+		Comment string `json:"comment"`
+	}{}
 	if err := c.ShouldBindJSON(&jsonData); err != nil {
 		c.JSON(http.StatusOK, er.ParamsError)
 	}
@@ -64,5 +66,5 @@ func PostByComment(c *gin.Context) {
 		}
 	}
 	service.Send(ids, jsonData.Comment)
-	c.JSON(http.StatusOK, re.NewByData(gin.H{"result": true}))
+	c.JSON(http.StatusOK, re.Data(gin.H{"result": true}))
 }

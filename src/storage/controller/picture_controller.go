@@ -17,7 +17,7 @@ import (
 	"strings"
 )
 
-func GetBy(c *gin.Context){
+func GetBy(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusNotFound, "")
@@ -25,7 +25,7 @@ func GetBy(c *gin.Context){
 	}
 	picture := model.Picture{Id: id}
 	if ok, _ := core.Orm.Get(&picture); ok {
-		c.JSON(http.StatusOK, re.NewByData(gin.H{"picture": picture}))
+		c.JSON(http.StatusOK, re.Data(gin.H{"picture": picture}))
 	} else {
 		c.JSON(http.StatusOK, er.SourceNotExistError)
 	}
@@ -49,7 +49,7 @@ func Post(c *gin.Context) {
 		if _, err := core.Orm.Insert(picture); err != nil {
 		}
 	}
-	c.JSON(http.StatusOK, re.NewByData(gin.H{"picture": *picture}))
+	c.JSON(http.StatusOK, re.Data(gin.H{"picture": *picture}))
 }
 
 func PostEditor(c *gin.Context) {
