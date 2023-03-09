@@ -30,5 +30,6 @@ type Configuration struct {
 		Mode string `yaml:"mode"`
 	}
 
-	StaticRoot string `yaml:"static_root"`
+	StaticRoot    string   `yaml:"static_root"`
+	PathWhiteList []string `yaml:"path_white_list"`
 }
