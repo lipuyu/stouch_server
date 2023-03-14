@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"stouch_server/src/auth/model"
+	"stouch_server/src/common/livemsg"
 	"stouch_server/src/common/re"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
@@ -31,7 +32,7 @@ func PostContentBy(c *gin.Context) {
 			}
 		}
 	}
-	closeIds := service.Send(ids, strconv.Itoa(len(ids))+"个人正在看这条内容，你可以与他们沟通。")
+	closeIds := service.Send(ids, livemsg.LiveMsg{Code: livemsg.LiveCount, Data: livemsg.LiveCountMsg{Count: len(ids)}})
 	if len(closeIds) != 0 {
 		core.Redis.SRem(datalayer.GetBookContentKey(id), utils.TransIntsToInterface(closeIds)...)
 	}
