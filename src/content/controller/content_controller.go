@@ -9,7 +9,6 @@ import (
 	"stouch_server/src/content/model"
 	"stouch_server/src/core"
 	"stouch_server/src/websock/datalayer"
-	"stouch_server/src/websock/service"
 	"strconv"
 )
 
@@ -65,6 +64,5 @@ func PostByComment(c *gin.Context) {
 			}
 		}
 	}
-	service.Send(ids, jsonData.Comment)
 	c.JSON(http.StatusOK, re.Data(gin.H{"result": true}))
 }
