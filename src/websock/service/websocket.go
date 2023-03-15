@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"stouch_server/src/auth/model"
 	"stouch_server/src/common/livemsg"
@@ -19,13 +20,16 @@ var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
 
 func closeAction(id int64) {
 	if conn, ok := connMap.Load(id); ok {
-		conn.(*websocket.Conn).Close()
+		if err := conn.(*websocket.Conn).Close(); err != nil {
+			core.Logger.Error(logrus.Fields{"id": id, "err": err})
+		}
 		connMap.Delete(id)
 	}
 	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LiveCount, livemsg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
+	core.Logger.Info("websock connect is closed. userId: ", id)
 }
 
-func Send(ids []int64, message livemsg.LiveMsg) []int64 {
+func Send(ids []int64, message *livemsg.LiveMsg) []int64 {
 	var closeIds []int64
 	for _, id := range ids {
 		if conn, ok := connMap.Load(id); ok {
@@ -46,7 +50,9 @@ func Send(ids []int64, message livemsg.LiveMsg) []int64 {
 func SendMessageToAll(message *livemsg.LiveMsg) {
 	connMap.Range(func(key any, value any) bool {
 		jsonBytes, _ := json.Marshal(message)
-		value.(*websocket.Conn).WriteMessage(1, jsonBytes)
+		err := value.(*websocket.Conn).WriteMessage(1, jsonBytes)
+		if err != nil {
+		}
 		return true
 	})
 }
@@ -67,7 +73,7 @@ func handleConnectionAll(c *gin.Context) {
 			core.Logger.Error("read websocket message: ", err)
 			break
 		}
-		core.Logger.Info(string(message))
+		core.Logger.WithFields(logrus.Fields{"userId": user.Id}).Info(string(message))
 		// ping pong 保活
 		if string(message) == "ping" {
 			err = con.WriteMessage(mt, []byte("pong"))

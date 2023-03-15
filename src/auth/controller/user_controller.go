@@ -23,7 +23,7 @@ func Get(c *gin.Context) {
 	c.JSON(http.StatusOK, re.Data(gin.H{"user": user}))
 }
 
-func PostLoginIn(c *gin.Context) {
+func PostLogin(c *gin.Context) {
 	jsonData := map[string]string{"username": "", "password": ""}
 	_ = c.ShouldBindJSON(&jsonData)
 	username, _ := jsonData["username"]

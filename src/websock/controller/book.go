@@ -32,7 +32,7 @@ func PostContentBy(c *gin.Context) {
 			}
 		}
 	}
-	closeIds := service.Send(ids, livemsg.LiveMsg{Code: livemsg.LiveCount, Data: livemsg.LiveCountMsg{Count: len(ids)}})
+	closeIds := service.Send(ids, &livemsg.LiveMsg{Code: livemsg.LiveCount, Data: livemsg.LiveCountMsg{Count: len(ids)}})
 	if len(closeIds) != 0 {
 		core.Redis.SRem(datalayer.GetBookContentKey(id), utils.TransIntsToInterface(closeIds)...)
 	}
