@@ -10,4 +10,5 @@ func AddRoutes(rg *gin.RouterGroup) {
 	rg.GET("", controller.Get)
 	rg.POST("", controller.Post)
 	rg.POST("/comment/:id", controller.PostByComment)
+	rg.PUT("", controller.Put)
 }

@@ -34,10 +34,25 @@ func Post(c *gin.Context) {
 	c.JSON(http.StatusOK, re.Data(gin.H{"topic": topic}))
 }
 
-func GetBy(c *gin.Context) {
+func Put(c *gin.Context) {
 	topic := model.Topic{}
-	_ = c.ShouldBindUri(&topic)
-	if ok, _ := core.Orm.Get(&topic); ok {
+	if err := c.ShouldBindJSON(&topic); err == nil {
+		if _, err = core.Orm.Id(topic.Id).Update(&topic); err != nil {
+		}
+	} else {
+		c.JSON(http.StatusOK, er.JsonBodyError)
+		return
+	}
+	c.JSON(http.StatusOK, re.Data(gin.H{"topic": topic}))
+}
+
+func GetBy(c *gin.Context) {
+	var query = struct {
+		Id string `uri:"id" binding:"required"`
+	}{}
+	topic := model.Topic{}
+	_ = c.ShouldBindUri(&query)
+	if ok, _ := core.Orm.Id(query.Id).Get(&topic); ok {
 		c.JSON(http.StatusOK, re.Data(gin.H{"topic": topic}))
 	} else {
 		c.JSON(http.StatusOK, er.SourceNotExistError)

@@ -16,6 +16,7 @@ func loadOrm(c Configuration) {
 			fmt.Println(err)
 			os.Exit(-1)
 		}
+		Orm.ShowSQL(true)
 	}
 	if _, err := Orm.QueryString("select 1"); err != nil {
 		fmt.Println(err)
