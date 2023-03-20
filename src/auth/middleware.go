@@ -14,14 +14,8 @@ import (
 func Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := c.Request.URL.Path
-		ticket := c.GetHeader("ticket")
-		app := c.GetHeader("app")
-
-		// websocket 信息进行特殊处理
-		if strings.HasPrefix(path, "/api/websocket") {
-			ticket = c.Query("ticket")
-			app = c.Query("app")
-		}
+		ticket, _ := c.Cookie("ticket")
+		app, _ := c.Cookie("app")
 
 		if strings.HasPrefix(path, "/static/") || path == "/" {
 			c.Next()
