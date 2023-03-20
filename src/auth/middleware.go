@@ -23,6 +23,11 @@ func Middleware() gin.HandlerFunc {
 			app = c.Query("app")
 		}
 
+		if strings.HasPrefix(path, "/static/") || path == "/" {
+			c.Next()
+			return
+		}
+
 		if app != "stouch" {
 			c.Abort()
 			c.JSON(http.StatusOK, re.Error(er.AppError))

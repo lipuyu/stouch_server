@@ -1,5 +1,5 @@
 *.yml
-lib/core/static/*
+resources/static/*
 go.sum
 .idea/*
 main
