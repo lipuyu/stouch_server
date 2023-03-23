@@ -13,8 +13,8 @@ type User struct {
 	Salt      string    `xorm:"varchar(32)" json:"-"`
 	Username  string    `xorm:"varchar(32) notnull unique" json:"username"`
 	Password  string    `xorm:"varchar(32)" json:"-"`
-	Mobile    string    `xorm:"varchar(16)" json:"mobile"`
-	Avatar    int64     `xorm:"bigint(20)" json:"avatar"`
+	Mobile    string    `xorm:"varchar(16)" json:"-"`
+	Avatar    string    `xorm:"varchar(36)" json:"avatar"`
 	Gender    int       `xorm:"int(11)" json:"gender"`
 	CreatedAt time.Time `xorm:"created" json:"createdAt"`
 	Birthday  time.Time `xorm:"datetime" json:"birthday"`

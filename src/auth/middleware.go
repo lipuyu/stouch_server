@@ -29,8 +29,7 @@ func Middleware() gin.HandlerFunc {
 		}
 
 		// URL 拦截
-		if c.Request.Method == "OPTIONS" || utils.In(core.Config.PathWhiteList, path) ||
-			strings.HasPrefix(path, "/test/") {
+		if c.Request.Method == "OPTIONS" || utils.PathMatch(core.Config.PathWhiteList, path) {
 			c.Next()
 			return
 		}

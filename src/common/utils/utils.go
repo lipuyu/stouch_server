@@ -44,8 +44,11 @@ func TransIntsToInterface(slice []int64) []interface{} {
 	return s
 }
 
-func In(ss []string, s string) bool {
+func PathMatch(ss []string, s string) bool {
 	for _, val := range ss {
+		if strings.HasSuffix(val, "*") && strings.HasPrefix(s, val[:len(val)-1]) {
+			return true
+		}
 		if val == s {
 			return true
 		}

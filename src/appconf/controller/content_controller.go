@@ -6,5 +6,5 @@ import (
 )
 
 func GetCdn(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"cdn": "http://airport.xiaorere.com"})
+	c.JSON(http.StatusOK, gin.H{"cdn": "https://stouch.oss-cn-beijing.aliyuncs.com/"})
 }
