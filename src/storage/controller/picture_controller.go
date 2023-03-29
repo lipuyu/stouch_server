@@ -70,5 +70,5 @@ func PostEditor(c *gin.Context) {
 		if _, err := core.Orm.Insert(picture); err != nil {
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"default": "https://lipuyu.oss-cn-shanghai.aliyuncs.com/" + picture.Md5 + "." + picture.Format})
+	c.JSON(http.StatusOK, gin.H{"default": "https://stouch.oss-cn-beijing.aliyuncs.com/" + picture.Md5 + "." + picture.Format})
 }

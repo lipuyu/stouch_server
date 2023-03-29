@@ -6,5 +6,5 @@ import (
 )
 
 func AddRoutes(rg *gin.RouterGroup) {
-	rg.GET("/cdn", controller.GetCdn)
+	rg.GET("", controller.Get)
 }
