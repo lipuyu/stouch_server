@@ -23,3 +23,10 @@ log:
   logFilePath: ./
 
 static_root: ./resources/static
+
+path_white_list:
+  - /
+  - /api/user/login
+  - /api/user/signup
+  - /api/picture/*
+  - /test/*

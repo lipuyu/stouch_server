@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"os"
@@ -27,7 +26,6 @@ func init() {
 }
 
 func loadAll(c Configuration) {
-	fmt.Println("init... config info:", Config)
 	loadRedis(c)
 	loadCache()
 	loadOrm(c)
