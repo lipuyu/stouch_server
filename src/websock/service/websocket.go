@@ -10,8 +10,11 @@ import (
 	"stouch_server/src/common/livemsg"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
+	"stouch_server/src/websock/handler"
 	"sync"
 )
+
+var msgHandlers = []handler.MsgHandler{handler.PingMsgHandler{}}
 
 var connMap = &sync.Map{}
 var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
