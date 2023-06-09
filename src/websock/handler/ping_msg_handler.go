@@ -3,10 +3,10 @@ package handler
 type PingMsgHandler struct {
 }
 
-func (p PingMsgHandler) GetBackMsg(input string) string {
-	if input == "ping" {
-		return "pong"
+func (p PingMsgHandler) GetBackMsg(input []byte) (bool, []byte) {
+	if string(input) == "ping" {
+		return true, []byte("pong")
 	} else {
-		return ""
+		return false, nil
 	}
 }

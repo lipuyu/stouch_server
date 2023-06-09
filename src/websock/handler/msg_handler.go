@@ -1,5 +1,5 @@
 package handler
 
 type MsgHandler interface {
-	GetBackMsg(input string) string
+	GetBackMsg(input []byte) (bool, []byte)
 }
