@@ -7,8 +7,8 @@ import (
 	"stouch_server/src/common/er"
 	"stouch_server/src/common/re"
 	"stouch_server/src/content/model"
+	"stouch_server/src/content/service/datalayer"
 	"stouch_server/src/core"
-	"stouch_server/src/websock/datalayer"
 	"strconv"
 )
 

@@ -10,7 +10,6 @@ import (
 	"stouch_server/src/core"
 	"stouch_server/src/core/middlewares"
 	"stouch_server/src/storage"
-	"stouch_server/src/websock"
 	"stouch_server/src/websock/service"
 	"time"
 )
@@ -28,7 +27,6 @@ func main() {
 	appconf.AddRoutes(group.Group("/appconf"))
 	auth.AddRoutes(group.Group("/user"))
 	content.AddRoutes(group.Group("/content"))
-	websock.AddRoutes(group.Group("/book"))
 	storage.AddRoutes(group.Group("/picture"))
 	service.AddWebsocketRoutes(group.Group("/websocket"))
 
