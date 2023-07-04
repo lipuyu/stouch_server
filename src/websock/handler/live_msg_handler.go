@@ -13,7 +13,6 @@ func (p LiveMsgHandler) GetBackMsg(input []byte) (bool, []byte) {
 	msg := &livemsg.LiveMsg{}
 	if err := json.Unmarshal(input, msg); err != nil && msg.Code == livemsg.LiveStatus {
 		liveStatusMsgR := msg.Data.(livemsg.LiveStatusMsgR)
-
 		liveStatusMsg := livemsg.LiveStatusMsg{}
 		liveStatusMsg.UserId = liveStatusMsgR.UserId
 		liveStatusMsg.Status = livepool.Online(liveStatusMsgR.UserId)
