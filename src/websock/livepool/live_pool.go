@@ -7,6 +7,7 @@ import (
 	"stouch_server/src/common/livemsg"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
+	"stouch_server/src/live/msg"
 	"sync"
 )
 
@@ -56,6 +57,6 @@ func CloseAction(id int64) {
 		}
 		connMap.Delete(id)
 	}
-	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LiveCount, livemsg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
+	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LiveCount, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
 	core.Logger.Info("websock connect is closed. userId: ", id)
 }

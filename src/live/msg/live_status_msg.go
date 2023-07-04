@@ -1,4 +1,4 @@
-package livemsg
+package msg
 
 type LiveStatusMsg struct {
 	Status bool  `json:"status"`

@@ -8,6 +8,7 @@ import (
 	"stouch_server/src/common/re"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
+	"stouch_server/src/live/msg"
 	"stouch_server/src/websock/datalayer"
 	"stouch_server/src/websock/livepool"
 	"strconv"
@@ -32,7 +33,7 @@ func PostContentBy(c *gin.Context) {
 			}
 		}
 	}
-	closeIds := livepool.Send(ids, &livemsg.LiveMsg{Code: livemsg.LiveCount, Data: livemsg.LiveCountMsg{Count: len(ids)}})
+	closeIds := livepool.Send(ids, &livemsg.LiveMsg{Code: livemsg.LiveCount, Data: msg.LiveCountMsg{Count: len(ids)}})
 	if len(closeIds) != 0 {
 		core.Redis.SRem(datalayer.GetBookContentKey(id), utils.TransIntsToInterface(closeIds)...)
 	}

@@ -7,15 +7,18 @@ import (
 	"net/http"
 	"stouch_server/src/auth/model"
 	"stouch_server/src/common/livemsg"
+	"stouch_server/src/common/msghandler"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
+	handler2 "stouch_server/src/live/handler"
+	"stouch_server/src/live/msg"
 	"stouch_server/src/websock/handler"
 	"stouch_server/src/websock/livepool"
 )
 
-var msgHandlers = []handler.MsgHandler{
+var msgHandlers = []msghandler.MsgHandler{
 	handler.PingMsgHandler{},
-	handler.LiveMsgHandler{},
+	handler2.LiveMsgHandler{},
 }
 
 var connMap = livepool.GetConnMap()
@@ -32,7 +35,7 @@ func handleConnectionAll(c *gin.Context) {
 	user := c.MustGet("user").(model.User)
 	connMap.Store(user.Id, con)
 	defer livepool.CloseAction(user.Id)
-	livepool.SendMessageToAll(livemsg.NewLiveMsg(livemsg.LiveCount, livemsg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
+	livepool.SendMessageToAll(livemsg.NewLiveMsg(livemsg.LiveCount, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
 	for {
 		mt, message, err := con.ReadMessage()
 		if err != nil {
