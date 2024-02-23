@@ -57,6 +57,6 @@ func CloseAction(id int64) {
 		}
 		connMap.Delete(id)
 	}
-	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LiveCount, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
+	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
 	core.Logger.Info("websock connect is closed. userId: ", id)
 }

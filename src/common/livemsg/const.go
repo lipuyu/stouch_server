@@ -1,6 +1,6 @@
 package livemsg
 
 const (
-	LiveCount  int64 = 0
-	LiveStatus int64 = 1
+	LIVE_COUNT  int64 = 0
+	LIVE_STATUS int64 = 1
 )
