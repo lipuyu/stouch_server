@@ -7,10 +7,10 @@ import (
 	"stouch_server/src/websock/livepool"
 )
 
-type LiveMsgHandler struct {
+type LiveStatusMsgHandler struct {
 }
 
-func (p LiveMsgHandler) GetBackMsg(input []byte) (bool, []byte) {
+func (p LiveStatusMsgHandler) GetBackMsg(input []byte) (bool, []byte) {
 	message := &livemsg.LiveMsg{}
 	if err := json.Unmarshal(input, message); err != nil && message.Code == livemsg.LIVE_STATUS {
 		liveStatusMsgR := message.Data.(msg.LiveStatusMsgR)

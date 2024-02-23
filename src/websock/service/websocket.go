@@ -18,7 +18,7 @@ import (
 
 var msgHandlers = []msghandler.MsgHandler{
 	handler.PingMsgHandler{},
-	handler2.LiveMsgHandler{},
+	handler2.LiveStatusMsgHandler{},
 }
 
 var connMap = livepool.GetConnMap()
