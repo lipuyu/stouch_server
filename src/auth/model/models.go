@@ -39,14 +39,6 @@ func (user *User) Check(password string) bool {
 	return user.Password == getMd5(password, user.Salt)
 }
 
-func (user *User) GetCode(mobile string) bool {
-	return true
-}
-
-func (user *User) CheckCode(mobile string) bool {
-	return true
-}
-
 type Token struct {
 	Id        int64     `json:"id"` // auto-increment by-default by xorm
 	Ticket    string    `xorm:"varchar(32)" json:"ticket"`

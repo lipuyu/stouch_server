@@ -14,11 +14,6 @@ import (
 )
 
 func Get(c *gin.Context) {
-	/*
-		user1 := model.User{}
-		ctx.ReadJSON(&user1)
-		fmt.Println(user1)
-	*/
 	user := c.MustGet("user")
 	c.JSON(http.StatusOK, re.Data(gin.H{"user": user}))
 }
