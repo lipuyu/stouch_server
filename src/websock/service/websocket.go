@@ -6,12 +6,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"stouch_server/src/auth/model"
-	"stouch_server/src/common/livemsg"
 	"stouch_server/src/common/msghandler"
-	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
 	handler2 "stouch_server/src/live/handler"
-	"stouch_server/src/live/msg"
 	"stouch_server/src/websock/handler"
 	"stouch_server/src/websock/livepool"
 )
@@ -35,9 +32,7 @@ func handleConnectionAll(c *gin.Context) {
 	user := c.MustGet("user").(model.User)
 	connMap.Store(user.Id, con)
 	defer livepool.CloseAction(user.Id)
-	defer livepool.OpenAction(user.Id)
-	// 发送在线人数
-	livepool.SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
+	livepool.OpenAction(user.Id)
 	for {
 		mt, message, err := con.ReadMessage()
 		if err != nil {
