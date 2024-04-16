@@ -35,6 +35,7 @@ func handleConnectionAll(c *gin.Context) {
 	user := c.MustGet("user").(model.User)
 	connMap.Store(user.Id, con)
 	defer livepool.CloseAction(user.Id)
+	defer livepool.OpenAction(user.Id)
 	// 发送在线人数
 	livepool.SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
 	for {

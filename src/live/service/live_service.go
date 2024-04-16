@@ -11,7 +11,7 @@ type LiveService struct {
 }
 
 func (l LiveService) Focus(userId int64) {
-	core.Redis.SAdd(datalayer.GetFocusedKey(l.UserId), userId)
+	core.Redis.SAdd(datalayer.GetFocusedKey(userId), l.UserId)
 }
 
 func (l LiveService) GetFoucsMeIds() []int64 {

@@ -8,6 +8,7 @@ import (
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
 	"stouch_server/src/live/msg"
+	"stouch_server/src/live/service"
 	"sync"
 )
 
@@ -50,6 +51,13 @@ func Send(ids []int64, message *livemsg.LiveMsg) []int64 {
 	return closeIds
 }
 
+func OpenAction(id int64) {
+	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
+	liveMsg := livemsg.NewLiveMsg(livemsg.LIVE_STATUS, msg.LiveStatusMsg{Status: true, UserId: id})
+	Send(service.LiveService{UserId: id}.GetFoucsMeIds(), liveMsg)
+	core.Logger.Info("websock connect is open. userId: ", id)
+}
+
 func CloseAction(id int64) {
 	if conn, ok := connMap.Load(id); ok {
 		if err := conn.(*websocket.Conn).Close(); err != nil {
@@ -58,5 +66,7 @@ func CloseAction(id int64) {
 		connMap.Delete(id)
 	}
 	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
+	liveMsg := livemsg.NewLiveMsg(livemsg.LIVE_STATUS, msg.LiveStatusMsg{Status: false, UserId: id})
+	Send(service.LiveService{UserId: id}.GetFoucsMeIds(), liveMsg)
 	core.Logger.Info("websock connect is closed. userId: ", id)
 }
