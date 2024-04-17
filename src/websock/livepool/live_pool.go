@@ -2,7 +2,6 @@ package livepool
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/sirupsen/logrus"
 	"stouch_server/src/common/livemsg"
@@ -71,11 +70,9 @@ func CloseAction(id int64) {
 		}
 		connMap.Delete(id)
 	}
-	ConnMap := connMap
-	count := utils.GetSyncMapLen(ConnMap)
-	fmt.Println(count)
-	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(ConnMap)}))
+	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
 	liveMsg := livemsg.NewLiveMsg(livemsg.LIVE_STATUS, msg.LiveStatusMsg{Status: false, UserId: id})
-	Send(service.LiveService{UserId: id}.GetFoucsMeIds(), liveMsg)
+	ids := Send(service.LiveService{UserId: id}.GetFoucsMeIds(), liveMsg)
+	service.LiveService{UserId: id}.UnFocused(ids)
 	core.Logger.Info("websock connect is closed. userId: ", id)
 }

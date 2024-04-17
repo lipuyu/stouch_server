@@ -25,3 +25,11 @@ func (l LiveService) GetFoucsMeIds() []int64 {
 	}
 	return ids
 }
+
+func (l LiveService) UnFocused(userIds []int64) {
+	var interfaceSlice []interface{}
+	for _, id := range userIds {
+		interfaceSlice = append(interfaceSlice, id)
+	}
+	core.Redis.SRem(datalayer.GetFocusedKey(l.UserId), interfaceSlice...)
+}

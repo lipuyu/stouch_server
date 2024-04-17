@@ -12,12 +12,12 @@ import (
 
 func PostFocusUser(c *gin.Context) {
 	msg := msg.LiveStatusMsgR{}
-	if err := c.ShouldBindUri(&msg); err == nil {
-		liveService := service.LiveService{UserId: msg.UserId}
+	if err := c.ShouldBindJSON(&msg); err == nil {
 		user := c.MustGet("user").(model.User)
-		liveService.Focus(user.Id)
+		liveService := service.LiveService{UserId: user.Id}
+		liveService.Focus(msg.UserId)
 	} else {
-		c.JSON(http.StatusOK, er.JsonBodyError)
+		c.JSON(http.StatusOK, re.Error(er.JsonBodyError))
 		return
 	}
 	c.JSON(http.StatusOK, re.Data(gin.H{}))
