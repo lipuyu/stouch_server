@@ -22,3 +22,16 @@ func PostFocusUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, re.Data(gin.H{}))
 }
+
+func PostUnfocusUser(c *gin.Context) {
+	msg := msg.LiveStatusMsgR{}
+	if err := c.ShouldBindJSON(&msg); err == nil {
+		user := c.MustGet("user").(model.User)
+		liveService := service.LiveService{UserId: user.Id}
+		liveService.Focus(msg.UserId)
+	} else {
+		c.JSON(http.StatusOK, re.Error(er.JsonBodyError))
+		return
+	}
+	c.JSON(http.StatusOK, re.Data(gin.H{}))
+}

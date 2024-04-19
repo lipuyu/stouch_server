@@ -6,5 +6,6 @@ import (
 )
 
 func AddRoutes(rg *gin.RouterGroup) {
-	rg.POST("/focus", controller.PostFocusUser)
+	rg.POST("/focusUser", controller.PostFocusUser)
+	rg.POST("/unfocusUser", controller.PostUnfocusUser)
 }
