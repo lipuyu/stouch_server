@@ -8,27 +8,28 @@ import (
 	"stouch_server/src/common/re"
 	"stouch_server/src/live/msg"
 	"stouch_server/src/live/service"
+	"stouch_server/src/websock/livepool"
 )
 
 func PostFocusUser(c *gin.Context) {
-	msg := msg.LiveStatusMsgR{}
-	if err := c.ShouldBindJSON(&msg); err == nil {
+	msgR := msg.LiveStatusMsgR{}
+	if err := c.ShouldBindJSON(&msgR); err == nil {
 		user := c.MustGet("user").(model.User)
 		liveService := service.LiveService{UserId: user.Id}
-		liveService.Focus(msg.UserId)
+		liveService.Focus(msgR.UserId)
 	} else {
 		c.JSON(http.StatusOK, re.Error(er.JsonBodyError))
 		return
 	}
-	c.JSON(http.StatusOK, re.Data(gin.H{}))
+	c.JSON(http.StatusOK, re.Data(gin.H{"status": livepool.Online(msgR.UserId)}))
 }
 
 func PostUnfocusUser(c *gin.Context) {
-	msg := msg.LiveStatusMsgR{}
-	if err := c.ShouldBindJSON(&msg); err == nil {
+	msgR := msg.LiveStatusMsgR{}
+	if err := c.ShouldBindJSON(&msgR); err == nil {
 		user := c.MustGet("user").(model.User)
 		liveService := service.LiveService{UserId: user.Id}
-		liveService.Focus(msg.UserId)
+		liveService.Focus(msgR.UserId)
 	} else {
 		c.JSON(http.StatusOK, re.Error(er.JsonBodyError))
 		return
