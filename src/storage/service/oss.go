@@ -11,7 +11,7 @@ import (
 
 var bucket *oss.Bucket
 
-func init_copy() {
+func initCopy() {
 	// 创建OSSClient实例。
 	client, err := oss.New(core.Config.Oss.EndPoint, core.Config.Oss.AccessKeyId, core.Config.Oss.AccessKeySecret)
 	if err != nil {
@@ -30,7 +30,7 @@ func init_copy() {
 	err = bucket.PutObject("test.txt", strings.NewReader("hello world!"))
 	if err != nil {
 		fmt.Println("Error:", err)
-		os.Exit(-1)
+		//os.Exit(-1)
 	}
 }
 
