@@ -6,17 +6,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"stouch_server/src/auth/model"
-	"stouch_server/src/common/msghandler"
 	"stouch_server/src/core"
-	handler2 "stouch_server/src/live/handler"
-	"stouch_server/src/websock/handler"
 	"stouch_server/src/websock/livepool"
 )
-
-var msgHandlers = []msghandler.MsgHandler{
-	handler.PingMsgHandler{},
-	handler2.LiveStatusMsgHandler{},
-}
 
 var connMap = livepool.GetConnMap()
 var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
