@@ -10,17 +10,23 @@ import (
 )
 
 func UnfocusTopic(userId int64, topicId int64) {
-	core.Redis.SAdd(datalayer.GetBookContentKey(topicId), userId)
-	if userStrIds, err := core.Redis.SMembers(datalayer.GetBookContentKey(topicId)).Result(); err == nil {
-		msg := livemsg.NewLiveMsg(livemsg.VIEW_TOPIC, msg2.ViewTopicMsgR{Count: len(userStrIds)})
-		livepool.Send(utils.StringsToInts(userStrIds), msg)
-	}
+	key := datalayer.GetBookTopicKey(topicId)
+	core.Redis.SAdd(key, userId)
+	sendTopicFocusUserCount(key)
 }
 
 func FocusTopic(userId int64, topicId int64) {
-	core.Redis.SRem(datalayer.GetBookContentKey(topicId), userId)
-	if userStrIds, err := core.Redis.SMembers(datalayer.GetBookContentKey(topicId)).Result(); err == nil {
+	key := datalayer.GetBookTopicKey(topicId)
+	core.Redis.SRem(key, userId)
+	sendTopicFocusUserCount(key)
+}
+
+func sendTopicFocusUserCount(key string) {
+	if userStrIds, err := core.Redis.SMembers(key).Result(); err == nil {
 		msg := livemsg.NewLiveMsg(livemsg.VIEW_TOPIC, msg2.ViewTopicMsgR{Count: len(userStrIds)})
-		livepool.Send(utils.StringsToInts(userStrIds), msg)
+		closeIds := livepool.Send(utils.StringsToInts(userStrIds), msg)
+		if len(closeIds) != 0 {
+			core.Redis.SRem(key, utils.TransIntsToInterface(closeIds)...)
+		}
 	}
 }
