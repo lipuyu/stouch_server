@@ -11,4 +11,6 @@ func AddRoutes(rg *gin.RouterGroup) {
 	rg.POST("", controller.Post)
 	rg.POST("/comment/:id", controller.PostByComment)
 	rg.PUT("", controller.Put)
+	rg.POST("/focusTopic/:id", controller.PostFocusTopic)
+	rg.POST("/unfocusTopic/:id", controller.PostUnfocusTopic)
 }

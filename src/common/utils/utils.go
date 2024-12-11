@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"io"
 	"io/ioutil"
+	"strconv"
 	"strings"
 	"sync"
 )
@@ -63,4 +64,16 @@ func GetSyncMapLen(m *sync.Map) int {
 		return true
 	})
 	return count
+}
+
+func StringsToInts(strings []string) []int64 {
+	var ints []int64
+	for _, s := range strings {
+		if i, err := strconv.ParseInt(s, 10, 64); err == nil {
+			ints = append(ints, i)
+		} else {
+			ints = append(ints, 0)
+		}
+	}
+	return ints
 }

@@ -66,12 +66,12 @@ func PostByComment(c *gin.Context) {
 	if err := c.ShouldBindJSON(&jsonData); err != nil {
 		c.JSON(http.StatusOK, er.ParamsError)
 	}
-	var ids []int64
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusNotFound, "")
 		return
 	}
+	var ids []int64
 	if results, err := core.Redis.SMembers(datalayer.GetBookContentKey(id)).Result(); err == nil {
 		for _, val := range results {
 			if id, err := strconv.ParseInt(val, 10, 64); err == nil {
