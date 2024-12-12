@@ -1,5 +1,6 @@
 package msg
 
 type ViewTopicMsgR struct {
-	Count int `json:"count"`
+	TopicId int64 `json:"topicId"`
+	Count   int   `json:"count"`
 }
