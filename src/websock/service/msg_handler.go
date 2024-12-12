@@ -1,12 +1,11 @@
 package service
 
 import (
+	"stouch_server/src/common/livemsg"
 	"stouch_server/src/common/msghandler"
-	handler2 "stouch_server/src/live/handler"
-	"stouch_server/src/websock/handler"
+	"stouch_server/src/live/handler"
 )
 
-var msgHandlers = []msghandler.MsgHandler{
-	handler.PingMsgHandler{},
-	handler2.LiveStatusMsgHandler{},
+var msgHandlerMap = map[int64]msghandler.MsgHandler{
+	livemsg.LIVE_STATUS: handler.LiveStatusMsgHandler{},
 }

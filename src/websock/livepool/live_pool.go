@@ -20,10 +20,6 @@ func Online(userId int64) bool {
 	return ok
 }
 
-func GetConnMap() *sync.Map {
-	return connMap
-}
-
 // SendMessageToAll 发送消息给所有人
 func SendMessageToAll(message *livemsg.LiveMsg) {
 	connMap.Range(func(key any, value any) bool {
@@ -55,7 +51,8 @@ func Send(ids []int64, message *livemsg.LiveMsg) []int64 {
 }
 
 // OpenAction 打开websocket处理函数
-func OpenAction(id int64) {
+func OpenAction(id int64, con *websocket.Conn) {
+	connMap.Store(id, con)
 	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
 	liveMsg := livemsg.NewLiveMsg(livemsg.LIVE_STATUS, msg.LiveStatusMsg{Status: true, UserId: id})
 	Send(service.LiveService{UserId: id}.GetFoucsMeIds(), liveMsg)
