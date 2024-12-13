@@ -9,7 +9,7 @@ import (
 	"stouch_server/src/auth/model"
 	"stouch_server/src/common/livemsg"
 	"stouch_server/src/core"
-	"stouch_server/src/websock/livepool"
+	"stouch_server/src/websock/conf"
 )
 
 var upgrader = websocket.Upgrader{CheckOrigin: func(r *http.Request) bool {
@@ -25,8 +25,8 @@ func handleConnectionAll(c *gin.Context) {
 	user := c.MustGet("user").(model.User)
 
 	// websocket打开关闭动作
-	defer livepool.CloseAction(user.Id)
-	livepool.OpenAction(user.Id, con)
+	defer CloseAction(user.Id)
+	OpenAction(user.Id, con)
 
 	for {
 		mt, message, err := con.ReadMessage()
@@ -41,7 +41,7 @@ func handleConnectionAll(c *gin.Context) {
 		} else {
 			msgObject := &livemsg.LiveMsg{}
 			if err := json.Unmarshal(message, msgObject); err != nil {
-				resultMsg := msgHandlerMap[msgObject.Code].GetBackMsg(msgObject)
+				resultMsg := conf.MsgHandlerMap[msgObject.Code].GetBackMsg(msgObject)
 				if jsonByte, err := json.Marshal(resultMsg); err == nil {
 					err = con.WriteMessage(mt, jsonByte)
 				}

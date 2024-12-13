@@ -1,4 +1,4 @@
-package service
+package conf
 
 import (
 	"stouch_server/src/common/livemsg"
@@ -6,6 +6,6 @@ import (
 	"stouch_server/src/live/handler"
 )
 
-var msgHandlerMap = map[int64]msghandler.MsgHandler{
+var MsgHandlerMap = map[int64]msghandler.MsgHandler{
 	livemsg.LIVE_STATUS: handler.LiveStatusMsgHandler{},
 }

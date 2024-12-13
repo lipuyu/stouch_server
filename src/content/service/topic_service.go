@@ -18,6 +18,8 @@ func UnfocusTopic(userId int64, topicId int64) {
 func FocusTopic(userId int64, topicId int64) {
 	key := datalayer.GetBookTopicKey(topicId)
 	core.Redis.SAdd(key, userId)
+	userTopicKey := datalayer.GetUserTopicKey(userId)
+	core.Redis.SAdd(userTopicKey, topicId)
 	sendTopicFocusUserCount(key, topicId)
 }
 
@@ -29,4 +31,14 @@ func sendTopicFocusUserCount(key string, topicId int64) {
 			core.Redis.SRem(key, utils.TransIntsToInterface(closeIds)...)
 		}
 	}
+}
+
+func OfflineTopicAction(userId int64) {
+	userTopicKey := datalayer.GetUserTopicKey(userId)
+	if userStrIds, err := core.Redis.SMembers(userTopicKey).Result(); err == nil {
+		for _, topicId := range utils.StringsToInts(userStrIds) {
+			UnfocusTopic(userId, topicId)
+		}
+	}
+	core.Redis.Del(userTopicKey)
 }

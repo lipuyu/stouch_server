@@ -3,24 +3,18 @@ package livepool
 import (
 	"encoding/json"
 	"github.com/gorilla/websocket"
-	"github.com/sirupsen/logrus"
 	"stouch_server/src/common/livemsg"
 	"stouch_server/src/common/utils"
 	"stouch_server/src/core"
-	"stouch_server/src/live/msg"
-	"stouch_server/src/live/service"
 	"sync"
 )
 
 var connMap = &sync.Map{}
 
-// Online 用户在线状态
-func Online(userId int64) bool {
-	_, ok := connMap.Load(userId)
-	return ok
+func GetConnMap() *sync.Map {
+	return connMap
 }
 
-// SendMessageToAll 发送消息给所有人
 func SendMessageToAll(message *livemsg.LiveMsg) {
 	connMap.Range(func(key any, value any) bool {
 		jsonBytes, _ := json.Marshal(message)
@@ -50,26 +44,12 @@ func Send(ids []int64, message *livemsg.LiveMsg) []int64 {
 	return closeIds
 }
 
-// OpenAction 打开websocket处理函数
-func OpenAction(id int64, con *websocket.Conn) {
-	connMap.Store(id, con)
-	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
-	liveMsg := livemsg.NewLiveMsg(livemsg.LIVE_STATUS, msg.LiveStatusMsg{Status: true, UserId: id})
-	Send(service.LiveService{UserId: id}.GetFoucsMeIds(), liveMsg)
-	core.Logger.Info("websock connect is open. userId: ", id)
+// Online 用户在线状态
+func Online(userId int64) bool {
+	_, ok := connMap.Load(userId)
+	return ok
 }
 
-// CloseAction 结束websocket处理函数
-func CloseAction(id int64) {
-	if conn, ok := connMap.Load(id); ok {
-		if err := conn.(*websocket.Conn).Close(); err != nil {
-			core.Logger.Error(logrus.Fields{"id": id, "err": err})
-		}
-		connMap.Delete(id)
-	}
-	SendMessageToAll(livemsg.NewLiveMsg(livemsg.LIVE_COUNT, msg.LiveCountMsg{Count: utils.GetSyncMapLen(connMap)}))
-	liveMsg := livemsg.NewLiveMsg(livemsg.LIVE_STATUS, msg.LiveStatusMsg{Status: false, UserId: id})
-	ids := Send(service.LiveService{UserId: id}.GetFoucsMeIds(), liveMsg)
-	service.LiveService{UserId: id}.UnFocused(ids)
-	core.Logger.Info("websock connect is closed. userId: ", id)
+func OnlineCount() int {
+	return utils.GetSyncMapLen(connMap)
 }
