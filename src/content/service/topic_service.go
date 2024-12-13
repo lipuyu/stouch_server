@@ -32,13 +32,3 @@ func sendTopicFocusUserCount(key string, topicId int64) {
 		}
 	}
 }
-
-func OfflineTopicAction(userId int64) {
-	userTopicKey := datalayer.GetUserTopicKey(userId)
-	if userStrIds, err := core.Redis.SMembers(userTopicKey).Result(); err == nil {
-		for _, topicId := range utils.StringsToInts(userStrIds) {
-			UnfocusTopic(userId, topicId)
-		}
-	}
-	core.Redis.Del(userTopicKey)
-}
