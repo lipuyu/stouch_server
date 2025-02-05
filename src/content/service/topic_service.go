@@ -25,7 +25,7 @@ func FocusTopic(userId int64, topicId int64) {
 
 func sendTopicFocusUserCount(key string, topicId int64) {
 	if userStrIds, err := core.Redis.SMembers(key).Result(); err == nil {
-		msg := livemsg.NewLiveMsg(livemsg.VIEW_TOPIC, msg2.ViewTopicMsgR{TopicId: topicId, Count: len(userStrIds)})
+		msg := livemsg.NewLiveMsg(livemsg.VIEW_TOPIC, msg2.ViewTopicMsg{TopicId: topicId, Count: len(userStrIds)})
 		closeIds := livepool.Send(utils.StringsToInts(userStrIds), msg)
 		if len(closeIds) != 0 {
 			core.Redis.SRem(key, utils.TransIntsToInterface(closeIds)...)
