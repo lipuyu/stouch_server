@@ -27,15 +27,15 @@ func Middleware() gin.HandlerFunc {
 			return
 		}
 
-		if app != "stouch" {
-			c.Abort()
-			c.JSON(http.StatusOK, re.Error(er.AppError))
-			return
-		}
-
 		// URL 拦截
 		if c.Request.Method == "OPTIONS" || utils.PathMatch(core.Config.PathWhiteList, path) {
 			c.Next()
+			return
+		}
+
+		if app != "stouch" {
+			c.Abort()
+			c.JSON(http.StatusOK, re.Error(er.AppError))
 			return
 		}
 
