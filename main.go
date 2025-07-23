@@ -32,7 +32,7 @@ func main() {
 	storage.AddRoutes(group.Group("/picture"))
 	service.AddWebsocketRoutes(group.Group("/websocket"))
 	live.AddRoutes(group.Group("/live"))
-	test.AddRoutes(group.Group("/test"))
+	test.AddRoutes(r.Group("/test"))
 
 	// 定时任务
 	go core.Run()

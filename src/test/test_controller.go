@@ -7,8 +7,14 @@ import (
 
 func Hign2(c *gin.Context) {
 	livepool.SendStringToAll("high2")
+	c.JSON(200, gin.H{
+		"status": "ok",
+	})
 }
 
 func Low2(c *gin.Context) {
 	livepool.SendStringToAll("low2")
+	c.JSON(200, gin.H{
+		"status": "ok",
+	})
 }
