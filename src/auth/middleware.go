@@ -17,6 +17,11 @@ func Middleware() gin.HandlerFunc {
 		ticket, _ := c.Cookie("ticket")
 		app, _ := c.Cookie("app")
 
+		if path == "/api/websocket" {
+			ticket = c.Query("ticket")
+			app = c.Query("app")
+		}
+
 		if strings.HasPrefix(path, "/static/") || path == "/" {
 			c.Next()
 			return
