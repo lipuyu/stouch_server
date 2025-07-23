@@ -25,6 +25,15 @@ func SendMessageToAll(message *livemsg.LiveMsg) {
 	})
 }
 
+func SendStringToAll(message string) {
+	connMap.Range(func(key any, value any) bool {
+		err := value.(*websocket.Conn).WriteMessage(1, []byte(message))
+		if err != nil {
+		}
+		return true
+	})
+}
+
 // Send 发送消息
 func Send(ids []int64, message *livemsg.LiveMsg) []int64 {
 	var closeIds []int64

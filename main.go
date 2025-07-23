@@ -11,6 +11,7 @@ import (
 	"stouch_server/src/core/middlewares"
 	"stouch_server/src/live"
 	"stouch_server/src/storage"
+	"stouch_server/src/test"
 	"stouch_server/src/websock/service"
 	"time"
 )
@@ -31,6 +32,7 @@ func main() {
 	storage.AddRoutes(group.Group("/picture"))
 	service.AddWebsocketRoutes(group.Group("/websocket"))
 	live.AddRoutes(group.Group("/live"))
+	test.AddRoutes(group.Group("/test"))
 
 	// 定时任务
 	go core.Run()
