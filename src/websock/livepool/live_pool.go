@@ -40,7 +40,7 @@ func Send(ids []int64, message *livemsg.LiveMsg) []int64 {
 	for _, id := range ids {
 		if conn, ok := connMap.Load(id); ok {
 			if messageJson, err := json.Marshal(message); err == nil {
-				if err := conn.(*websocket.Conn).WriteMessage(1, messageJson); err != nil {
+				if err := conn.(*websocket.Conn).WriteMessage(websocket.TextMessage, messageJson); err != nil {
 					core.Logger.Error("write to websocket:", err)
 				}
 			} else {

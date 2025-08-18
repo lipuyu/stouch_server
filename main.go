@@ -9,6 +9,8 @@ import (
 	"stouch_server/src/content"
 	"stouch_server/src/core"
 	"stouch_server/src/core/middlewares"
+	"stouch_server/src/equipment"
+	service2 "stouch_server/src/equipment/service"
 	"stouch_server/src/live"
 	"stouch_server/src/storage"
 	"stouch_server/src/test"
@@ -31,8 +33,10 @@ func main() {
 	content.AddRoutes(group.Group("/content"))
 	storage.AddRoutes(group.Group("/picture"))
 	service.AddWebsocketRoutes(group.Group("/websocket"))
+	service2.AddEquipmentRoutes(group.Group("/equipment/websocket"))
 	live.AddRoutes(group.Group("/live"))
 	test.AddRoutes(r.Group("/test"))
+	equipment.AddRoutes(group.Group("/equipment"))
 
 	// 定时任务
 	go core.Run()
