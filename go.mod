@@ -1,6 +1,6 @@
 module stouch_server
 
-go 1.18
+go 1.25
 
 require (
 	github.com/gin-gonic/gin v1.9.0
