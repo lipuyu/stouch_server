@@ -13,11 +13,13 @@ import (
 	"stouch_server/src/equipment/model"
 )
 
+// PostByDeviceCode 绑定设备
 func PostByDeviceCode(c *gin.Context) {
 	deviceCode := c.Param("device_code")
 
 	var device model.Device
-	if has, err := core.Orm.Where("unique_id = ?", deviceCode).Get(&device); err != nil {
+	if has, err := core.Orm.Where("device_code = ?", deviceCode).Get(&device); err != nil {
+		core.Logger.Error(err)
 		c.JSON(http.StatusInternalServerError, re.ErrorStr(err))
 		return
 	} else if !has {
@@ -31,12 +33,14 @@ func PostByDeviceCode(c *gin.Context) {
 
 	device.UserId = c.MustGet("user").(authModel.User).Id
 	if _, err := core.Orm.Update(&device); err != nil {
+		core.Logger.Error(err)
 		c.JSON(http.StatusInternalServerError, re.ErrorStr(err))
 		return
 	}
 	c.JSON(http.StatusOK, re.Data(device))
 }
 
+// GetDeviceByUser 获取用户绑定的设备
 func GetDeviceByUser(c *gin.Context) {
 	var devices []model.Device
 	userId := c.MustGet("user").(authModel.User).Id
@@ -49,6 +53,7 @@ func GetDeviceByUser(c *gin.Context) {
 	c.JSON(http.StatusOK, re.Data(gin.H{"devices": devices}))
 }
 
+// SendCommand 发送命令到设备
 func SendCommand(c *gin.Context) {
 	// 绑定json
 	var deviceCommandDTO dto.DeviceCommandDTO

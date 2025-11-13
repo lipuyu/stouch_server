@@ -6,7 +6,7 @@ import (
 )
 
 func AddRoutes(rg *gin.RouterGroup) {
-	rg.GET("/:device_code/bind", controller.PostByDeviceCode)
+	rg.POST("/:device_code/bind", controller.PostByDeviceCode)
 	rg.GET("/device", controller.GetDeviceByUser)
 	rg.POST("/command", controller.SendCommand)
 }
