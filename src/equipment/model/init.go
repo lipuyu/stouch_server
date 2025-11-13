@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	if err := core.Orm.Sync2(new(Device)); err != nil {
+	if err := core.Orm.Sync2(new(Device), new(DeviceHumidity), new(DeviceTemperature)); err != nil {
 		fmt.Println(err)
 	}
 }

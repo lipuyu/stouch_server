@@ -67,3 +67,17 @@ func SendCommand(c *gin.Context) {
 		c.JSON(http.StatusNotFound, re.Error(er.EquipmentOfflineError))
 	}
 }
+
+/**
+上传土壤湿度
+*/
+func Post() {
+
+}
+
+/**
+返回设备功能列表
+*/
+func GetDeviceFunctions() {
+
+}
