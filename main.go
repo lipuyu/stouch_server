@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"stouch_server/src/appconf"
 	"stouch_server/src/auth"
@@ -16,6 +15,8 @@ import (
 	"stouch_server/src/test"
 	"stouch_server/src/websock/service"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
