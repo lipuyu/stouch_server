@@ -1,10 +1,11 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"stouch_server/src/common/re"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Get(c *gin.Context) {

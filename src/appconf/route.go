@@ -1,8 +1,9 @@
 package appconf
 
 import (
-	"github.com/gin-gonic/gin"
 	"stouch_server/src/appconf/controller"
+
+	"github.com/gin-gonic/gin"
 )
 
 func AddRoutes(rg *gin.RouterGroup) {

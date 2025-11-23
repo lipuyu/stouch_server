@@ -1,10 +1,11 @@
 package service
 
 import (
-	"github.com/gorilla/websocket"
-	"github.com/sirupsen/logrus"
 	"stouch_server/src/core"
 	"stouch_server/src/equipment/livepooleq"
+
+	"github.com/gorilla/websocket"
+	"github.com/sirupsen/logrus"
 )
 
 // OpenAction 打开websocket处理函数

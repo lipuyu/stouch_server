@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"stouch_server/src/auth/model"
 	"stouch_server/src/common/er"
@@ -9,6 +8,8 @@ import (
 	"stouch_server/src/live/msg"
 	"stouch_server/src/live/service"
 	"stouch_server/src/websock/livepool"
+
+	"github.com/gin-gonic/gin"
 )
 
 func PostFocusUser(c *gin.Context) {

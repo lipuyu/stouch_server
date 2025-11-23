@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
 	"stouch_server/src/auth/model"
@@ -11,6 +10,8 @@ import (
 	"stouch_server/src/core"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Get(c *gin.Context) {
